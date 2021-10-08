@@ -1,0 +1,57 @@
+body {
+    background-color: rgb(252, 166, 201);
+    text-align: center;
+}
+h1:hover {
+    color: black;
+    transition: 0.3s;
+}
+h6{
+    font-family: 'Playfair', serif;
+    text-align: center;
+    color: white;
+    line-height: 1.5em;
+} 
+.prophet {
+color: white;
+}
+h1 {
+    text-align: center;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+p {
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    color: white;
+}
+sh4 {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    color: black;
+}
+
+h5 {
+    font-family: 'Roboto', sans-serif;
+}
+
+.section {
+    text-align: center;
+    
+}
+
+.largequote {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    line-height: 1.8em;
+    padding: 0 220px;
+    text-align: center;
+}
+
+.list {
+    font-family: 'Roboto', sans-serif;
+    display: table;
+    margin: 0 auto;
+    text-align: left;
+    line-height: 1.8em;
+}
