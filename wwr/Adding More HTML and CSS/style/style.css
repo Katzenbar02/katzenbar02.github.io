@@ -1,0 +1,28 @@
+body {
+    /* background-color: blue; */
+}
+nav a {
+    text-align: center;
+    color: #fcfbfb;
+    text-decoration: none;
+}    
+.gHead {
+    background-color:rgba(20,30,13, .7);
+    fill: grey;
+    text-decoration: none;
+    color: white;
+}
+.bgHead {
+    background-color:rgba(20,30,13, .7);
+    text-align: center;
+    color: #fcfbfb;
+    text-decoration: none;
+
+}
+.adventure {
+    text-align: center;
+    background-color: antiquewhite;
+}
+.icon {
+    width: 80px;
+}
