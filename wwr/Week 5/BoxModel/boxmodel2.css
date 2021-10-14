@@ -1,0 +1,64 @@
+body {
+    background-color: lawngreen;
+}
+
+h2 {
+    font-size: 40px;
+}
+
+.about {
+    background-color: plum;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 50%;
+    box-sizing: border-box;
+}
+
+.about h2 {
+    color: purple;
+}
+
+.contact {
+    background-color: rosybrown;
+    border: 2px solid black;
+    border-radius: 90px;
+}
+.contact p {
+    color: white;
+}
+
+.info {
+    width: 150px;
+    height: 150px;
+    border-radius: 150px;
+    background-color: cadetblue;
+    text-align: center;
+    margin: auto;
+}
+
+.info h2 {
+    font-size: 30px;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+main section {
+    border: 1px solid black
+}
+
+main section div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+main section div p {
+    border: 1px solid black
+}
+
+
+
+

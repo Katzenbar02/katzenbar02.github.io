@@ -1,0 +1,35 @@
+body{
+    background-color: rgb(115,115,115);
+}
+
+main section{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    padding: 25px;
+    
+}
+
+#header{
+    width: 100%;
+}
+
+.desk{
+    width: 200px;
+    border-radius: 150px;
+    border: 20px solid rgb(68,68,68);
+    margin: auto;
+}
+.graphic {
+    width: 200px;
+    border-radius: 150px;
+    border: 20px solid rgb(68,68,68);
+    margin: auto;
+}
+
+.person {
+    width: 200px;
+    border-radius: 150px;
+    border: 20px solid rgb(68,68,68);
+    margin: auto;
+}
