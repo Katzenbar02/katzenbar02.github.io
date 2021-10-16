@@ -1,5 +1,7 @@
 body {
-    /* background-color: blue; */
+    margin: 0;
+    height: 100%;
+
 }
 nav a {
     text-align: center;
@@ -12,6 +14,10 @@ nav a {
     text-decoration: none;
     color: white;
 }
+.fullPic {
+    height:  100%;
+    width: 100%;
+}
 .bgHead {
     background-color:rgba(20,30,13, .7);
     text-align: center;
@@ -23,6 +29,11 @@ nav a {
     text-align: center;
     background-color: antiquewhite;
 }
+.mainImg {
+    width: 40px;
+    border: 4000px solid rgb(68,68,68);
+}
+
 .icon {
     width: 80px;
 }
