@@ -1,0 +1,106 @@
+main {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    gap: 50px;
+}
+
+img {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0px;
+    margin-top: 0px; 
+    width:35%;
+    height: 94%;
+}
+
+h1 {
+    font-size: 52px;
+    font-weight: bold;
+    color: rgb(100, 100, 100);
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+p {
+    font-size: 25px;
+    color: rgb(100, 100, 100);
+}
+
+.info {
+    font-size: 20px;
+    width: 90%;
+    padding: 15px;
+}
+
+.check {
+    text-align: left;
+    margin: 20px;
+    margin-left: 10px;
+    font-size: 20px;
+    color: rgb(100, 100, 100);
+}
+
+button {
+    color: white;
+    background-color: #e39968;
+    border-radius: 5px;
+    border-width: 0px;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 25px;
+    width: 40%;
+}
+
+.popup .overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1;
+    display: none;
+}
+
+.popup .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #fff;
+    width: 60%;
+    height: 95%;
+    z-index: 2;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px black;
+}
+
+.popup .close-btn {
+    cursor: pointer;
+    position: absolute;
+    right: 30px;
+    top: 0px;
+    width: 30px;
+    font-size: 40px;
+    font-weight: bolder;
+    line-height: 60px;
+    text-align: center;
+
+}
+
+.popup.active .overlay {
+    display: block;
+}
+
+.popup.active .content {
+    transition: all 800ms ease-in-out;
+    transform: translate(-50%, -50%) scale(1);
+
+}

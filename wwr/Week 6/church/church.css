@@ -1,0 +1,44 @@
+body {
+    background-color: peachpuff;
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+    padding: 0%;
+    margin: 0%;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; 
+    grid-template-rows: 189px 189px 228px;
+    gap: 15px;
+    background-color: white;
+    max-width: 960px;
+    margin:0 auto;
+    padding: 5px 0px;
+}
+
+.conference {
+    grid-column: 1/3;
+    grid-row: 1/3;
+    background-image: linear-gradient( lavender, black);
+    color: white;
+    padding-top: 60%;
+}
+
+.prophet {
+    grid-column: 3/5;
+    background-color: darksalmon;
+    padding-top: 30%;
+}
+
+.learnmore {
+    grid-column: 3/5;
+    background-color: thistle;
+    padding-top: 30%;
+}
+
+h3 {
+    background-color: springgreen;
+    padding-top: 80%;
+}
