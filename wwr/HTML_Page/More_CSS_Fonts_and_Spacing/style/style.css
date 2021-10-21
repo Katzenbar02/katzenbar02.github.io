@@ -114,4 +114,7 @@ footer {
     padding: 10px;
 }
 
+main section img {
+    box-sizing: border-box;
+}
 
