@@ -12,6 +12,7 @@ nav a {
 nav a:hover {
     background-color: black;
     color: #d9c2a3;
+    text-decoration: underline;
 }
 
 header {
@@ -56,4 +57,5 @@ header {
 .book:hover, .join:hover {
     background-color: black;
     color: #d9c2a3;
+    text-decoration: underline;
 }
