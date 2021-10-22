@@ -45,7 +45,7 @@ header {
 }
 
 #content {
-    max-width: max-content;
+    max-width: 100%;
 }
 
 .book, .join {
