@@ -49,7 +49,8 @@ button {
     font-weight: bold;
     padding: 25px;
     width: 40%;
-}
+    text-transform: uppercase;
+}  
 
 .popup .overlay {
     position: fixed;
