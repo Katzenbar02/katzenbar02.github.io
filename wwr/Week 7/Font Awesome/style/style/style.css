@@ -1,0 +1,10 @@
+body {
+    font-size: 90px;
+    font-size: 48px;
+    color: indianred;
+}
+
+.slow-spin {
+    -webkit-animation: fa-spin 9s infinite linear;
+    animation: fa-spin 9s infinite linear;
+  }
