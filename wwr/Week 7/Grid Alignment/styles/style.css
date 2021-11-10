@@ -1,0 +1,116 @@
+main {
+    margin-left: 30%;
+}
+
+main section {
+   margin-bottom: 100px;
+}
+
+.content1 {
+display: grid;
+grid-template-columns: 1fr 1fr;
+border-radius: 10px;
+max-width: 600px;
+grid-template-rows: 1fr 1fr;
+border: solid black 5px;
+}
+
+.red1 {  
+    height: 100px; 
+    width: 100px;
+    background-color: red; 
+    margin-bottom: 175px;
+}
+
+.green1 {  
+    height: 100px; 
+    width: 100px;
+    background-color: green; 
+}
+
+.yellow1 {  
+    height: 100px; 
+    width: 100px;
+    background-color: yellow; 
+}
+
+.blue1 {  
+    height: 100px; 
+    width: 100px;
+    background-color: blue; 
+}
+
+.content2 {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    border-radius: 10px;
+    max-width: 600px;
+    max-height: 600px;
+    grid-template-rows: 1fr 1fr 175px;
+    border: solid black 5px;
+    }
+    
+    .red2 {  
+        height: 150px; 
+        width: 150px;
+        background-color: red; 
+    }
+    
+    .green2 {  
+        height: 150px; 
+        width: 150px;
+        background-color: green; 
+    }
+    
+    .yellow2 {  
+        height: 150px; 
+        width: 150px;
+        background-color: yellow; 
+    }
+    
+    .blue2 {  
+        height: 150px; 
+        width: 150px;
+        background-color: blue; 
+    }
+    
+.content3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-radius: 10px;
+    max-width: 600px;
+    max-height: 600px;
+    grid-template-rows: 1fr 1fr 200px;
+    border: solid black 5px;
+    }
+    
+    .red3 {  
+        height: 100px; 
+        width: 100px;
+        margin-bottom: 50px;
+        grid-column: 1/2;
+        background-color: red; 
+    }
+    
+    .green3 {  
+        height: 100px; 
+        width: 100px;
+        grid-column: 2/3;
+        background-color: green; 
+    }
+    
+    .yellow3 {  
+        height: 100px; 
+        width: 100px;
+        grid-column: 1/2;
+        grid-row: 2/3;
+        background-color: yellow; 
+    }
+    
+    .blue3 {  
+        height: 100px; 
+        width: 100px;
+        grid-column: 2/3;
+        grid-row: 2/3;
+        background-color: blue; 
+    }
