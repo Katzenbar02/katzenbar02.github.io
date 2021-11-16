@@ -1,29 +1,30 @@
 /* if you are using any Google fonts change the font names below to your fonts. 
 Any spaces in your font name should be replaced with a +. 
 Fonts are separated by a | */
-@import url('https://fonts.googleapis.com/css?family=IM+Fell+French+Canon+SC|Lato');
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&family=IM+Fell+French+Canon+SC&family=Kanit:ital,wght@1,900&display=swap');
+
 
 :root {
   /* change the values below to your colors from your palette */
-  --primary-color: #396E94   ;
-  --secondary-color: #E7C24F ;
-  --accent1-color: #A42212;
-  --accent2-color: white;
+  --primary-color: #F2EFDB   ;
+  --secondary-color: #312929 ;
+  --accent1-color: #1A1615;
+  --accent2-color: #FDA47E;
 
   /* change the values below to your chosen font(s) */
-  --heading-font: "IM Fell French Canon SC";
-  --paragraph-font: Lato, Helvetica, sans-serif;
+  --heading-font: Kanit;
+  --paragraph-font: Balsamiq, lato;
 
   /* these colors below should be chosen from among your palette colors above */
-  --headline-color-on-white: #396E94;  /* headlines on a white background */ 
-  --headline-color-on-color: white; /* headlines on a colored background */ 
-  --paragraph-color-on-white: #396E94; /* paragraph text on a white background */ 
-  --paragraph-color-on-color: white; /* paragraph text on a colored background */ 
-  --paragraph-background-color: #396E94  ;
-  --nav-link-color: #396E94;
-  --nav-background-color: #D4AC0D;
-  --nav-hover-link-color: white;
-  --nav-hover-background-color: #396E94;
+  --headline-color-on-white: #1A1615;  /* headlines on a white background */ 
+  --headline-color-on-color: #FDA47E; /* headlines on a colored background */ 
+  --paragraph-color-on-white: #F2EFDB; /* paragraph text on a white background */ 
+  --paragraph-color-on-color: #FDA47E; /* paragraph text on a colored background */ 
+  --paragraph-background-color: #1A1615  ;
+  --nav-link-color: #F2EFDB;
+  --nav-background-color: #312929;
+  --nav-hover-link-color: #FDA47E;
+  --nav-hover-background-color: #F2EFDB;
 }
 
 
@@ -86,9 +87,11 @@ p {
 }
 .secondary {
   background-color: var(--secondary-color);
+  color: #F2EFDB;
 }
 .accent1 {
   background-color: var(--accent1-color);
+  color: #F2EFDB;
 }
 .accent2{
   background-color: var(--accent2-color);
