@@ -1,0 +1,97 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font: 400 18px/1.8 "Lato", sans-serif;
+  }
+
+  header {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    background-color:rgba(10,10,10, .7);
+    background: linear-gradient(to right, rgb(255, 255, 255) 0%,rgba(126, 31, 31, 0) 120%);
+}
+
+header:hover {
+    background: linear-gradient(to left, rgb(255, 255, 255) 0%,rgba(255,255,255,0) 200%);  
+}
+  
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-self: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fcfbfb;
+    text-align: center;
+    padding: 40px;
+    padding-top: 2em;
+
+    transition: 0.1s;
+}
+nav a:hover {
+    font-size: 20px;
+    color: black;
+    transition: .1s;
+    background: linear-gradient(to right, rgb(255, 255, 255) 0%,rgba(255,255,255,0) 100%);  
+
+}
+
+#logo_link {
+    padding-top: 5px;
+    justify-self: center;
+    align-self: center;
+}   
+
+.logo {
+    width: 80px;
+}
+
+  .bgimg-1, .bgimg-2, .bgimg-3 {
+    position: relative;
+    opacity: 0.95;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  
+  }
+  .bgimg-1 {
+    background-image: url("images/Showers-Afterglow-3000.jpg");
+    min-height: 100%;
+  }
+  
+  .bgimg-2 {
+    background-image: url("images/Snow-Evening-3000-1.jpg");
+    min-height: 400px;
+  }
+  
+  .bgimg-3 {
+    background-image: url("images/Seven-Sisters-3000.jpg");
+    min-height: 400px;
+  }
+  
+  .caption {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    color: #000;
+  }
+  
+  .caption span.border {
+    background-color: #111;
+    color: #fff;
+    padding: 18px;
+    font-size: 25px;
+    letter-spacing: 10px;
+  }
+  
+  h3 {
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font: 20px "Lato", sans-serif;
+    color: #111;
+  }
