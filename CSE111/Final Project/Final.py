@@ -230,7 +230,7 @@ def add_grade_points():
         grade_point_6 = grade_6 * credit_6
 
         total_points = (grade_point_1 +grade_point_2 + grade_point_3 + grade_point_4 + grade_point_5 + grade_point_6)
-        Label(text=f"{total_points:.1f}    ",font="arial 12 bold").place(x=250,y=320)
+        Label(text=f"{total_points:.1f}                                    ",font="arial 12 bold").place(x=250,y=320)
 
         return total_points
 
@@ -248,7 +248,7 @@ def add_credits():
 
 
     total_credits=(credit_1 + credit_2 + credit_3 + credit_4 + credit_5 + credit_6)
-    Label(text=f"{total_credits}",font="arial 12 bold").place(x=250,y=350)
+    Label(text=f"{total_credits}                        ",font="arial 12 bold").place(x=250,y=350)
 
     return total_credits
 
@@ -324,12 +324,12 @@ sub5.place(x=50,y=240)
 sub6.place(x=50,y=270)
     
 # Takes grade value from entry
-grade1value=StringVar()
-grade2value=StringVar()
-grade3value=StringVar()
-grade4value=StringVar()
-grade5value=StringVar()
-grade6value=StringVar()
+grade1value=StringVar(value="F")
+grade2value=StringVar(value="F")
+grade3value=StringVar(value="F")
+grade4value=StringVar(value="F")
+grade5value=StringVar(value="F")
+grade6value=StringVar(value="F")
 
 grade1_entry=Entry(root,textvariable=grade1value,font="arial 12",width=2)
 grade2_entry=Entry(root,textvariable=grade2value,font="arial 12",width=2)
