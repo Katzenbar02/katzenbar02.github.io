@@ -1,179 +1,375 @@
-
-# global variables that relate to Grade Points
-# grade point letter converts to grade points 
-A = 4.0
-Aminus = 3.7
-Bplus = 3.3
-B = 3.0
-Bminus = 2.7
-Cplus = 2.3
-C = 2.0
-Cminus = 1.7
-Dplus = 1.3
-D = 1.0
-F = 0.0
-
-
-# Python program to create a simple GUI
-# calculator using Tkinter
-
-# import everything from tkinter module
+import tkinter
 from tkinter import *
 
-# globally declare the expression variable
-expression = ""
+root=Tk()
+root.title("GPA Calculator")
+root.geometry("520x560")
+
+def main():
+    total_GP = add_grade_points()
+    total_credits = add_credits()
+    GPA = compute_GPA(total_GP,total_credits)
+    compute_percentile(GPA)
+
+def add_grade_points():
+    A = 4.0
+    Aminus = 3.7
+    Bplus = 3.3
+    B = 3.0    
+    Bminus = 2.7
+    Cplus = 2.3
+    C = 2.0
+    Cminus = 1.7
+    Dplus = 1.3
+    D = 1.0
+    F = 0
+    
+    def compute_grade_1():
+        grade_1st=str(grade1_entry.get())
+
+        if grade_1st == "A":
+            grade_point1 = float(A)
+        elif grade_1st == "A-":
+            grade_point1 = float(Aminus)
+        elif grade_1st == "B+":
+            grade_point1 = float(Bplus)
+        elif grade_1st == "B":
+            grade_point1 = float(B)
+        elif grade_1st == "B-":
+            grade_point1 = float(Bminus)
+        elif grade_1st == "C+":
+            grade_point1 = float(Cplus)
+        elif grade_1st == "C":
+            grade_point1 = float(C)
+        elif grade_1st == "C-":
+            grade_point1 = float(Cminus)
+        elif grade_1st == "D+":
+            grade_point1 = float(Dplus)
+        elif grade_1st == "D":
+            grade_point1 = float(D)
+        elif grade_1st == "F":
+            grade_point1 = float(F)
+        else:
+            Label(text="Error (unvalid letter)",font="arial 12 bold").place(x=250,y=320)
+
+        return grade_point1
+
+    def compute_grade_2():
+        grade_2nd=str(grade2_entry.get())
+
+        if grade_2nd == "A":
+            grade_point2 = float(A)
+        elif grade_2nd == "A-":
+            grade_point2 = float(Aminus)
+        elif grade_2nd == "B+":
+            grade_point2 = float(Bplus)
+        elif grade_2nd == "B":
+            grade_point2 = float(B)
+        elif grade_2nd == "B-":
+            grade_point2 = float(Bminus)
+        elif grade_2nd == "C+":
+            grade_point2 = float(Cplus)
+        elif grade_2nd == "C":
+            grade_point2 = float(C)
+        elif grade_2nd == "C-":
+            grade_point2 = float(Cminus)
+        elif grade_2nd == "D+":
+            grade_point2 = float(Dplus)
+        elif grade_2nd == "D":
+            grade_point2 = float(D)
+        elif grade_2nd == "F":
+            grade_point2 = float(F)
+        else:
+            Label(text="Error",font="arial 12 bold").place(x=250,y=320)
+        
+        return grade_point2
+
+    def compute_grade_3():
+        grade_3rd=str(grade3_entry.get())
+
+        if grade_3rd == "A":
+            grade_point3 = float(A)
+        elif grade_3rd == "A-":
+            grade_point3 = float(Aminus)
+        elif grade_3rd == "B+":
+            grade_point3 = float(Bplus)
+        elif grade_3rd == "B":
+            grade_point3 = float(B)
+        elif grade_3rd == "B-":
+            grade_point3 = float(Bminus)
+        elif grade_3rd == "C+":
+            grade_point3 = float(Cplus)
+        elif grade_3rd == "C":
+            grade_point3 = float(C)
+        elif grade_3rd == "C-":
+            grade_point3 = float(Cminus)
+        elif grade_3rd == "D+":
+            grade_point3 = float(Dplus)
+        elif grade_3rd == "D":
+            grade_point3 = float(D)
+        elif grade_3rd == "F":
+            grade_point3 = float(F)
+        else:
+            Label(text="Error",font="arial 12 bold").place(x=250,y=320)
+        
+        return grade_point3
+
+    def compute_grade_4():
+        grade_4th=str(grade4_entry.get())
+
+        if grade_4th == "A":
+            grade_point4 = float(A)
+        elif grade_4th == "A-":
+            grade_point4 = float(Aminus)
+        elif grade_4th == "B+":
+            grade_point4 = float(Bplus)
+        elif grade_4th == "B":
+            grade_point4 = float(B)
+        elif grade_4th == "B-":
+            grade_point4 = float(Bminus)
+        elif grade_4th == "C+":
+            grade_point4 = float(Cplus)
+        elif grade_4th == "C":
+            grade_point4 = float(C)
+        elif grade_4th == "C-":
+            grade_point4 = float(Cminus)
+        elif grade_4th == "D+":
+            grade_point4 = float(Dplus)
+        elif grade_4th == "D":
+            grade_point4 = float(D)
+        elif grade_4th == "F":
+            grade_point4 = float(F)
+        else:
+            Label(text="Error",font="arial 12 bold").place(x=250,y=320)
+        
+        return grade_point4
+
+    def compute_grade_5():
+        grade_5th=str(grade5_entry.get())
+
+        if grade_5th == "A":
+            grade_point5 = float(A)
+        elif grade_5th == "A-":
+            grade_point5 = float(Aminus)
+        elif grade_5th == "B+":
+            grade_point5 = float(Bplus)
+        elif grade_5th == "B":
+            grade_point5 = float(B)
+        elif grade_5th == "B-":
+            grade_point5 = float(Bminus)
+        elif grade_5th == "C+":
+            grade_point5 = float(Cplus)
+        elif grade_5th == "C":
+            grade_point5 = float(C)
+        elif grade_5th == "C-":
+            grade_point5 = float(Cminus)
+        elif grade_5th == "D+":
+            grade_point5 = float(Dplus)
+        elif grade_5th == "D":
+            grade_point5 = float(D)
+        elif grade_5th == "F":
+            grade_point5 = float(F)
+        else:
+            Label(text="Error",font="arial 12 bold").place(x=250,y=320)
+        
+        return grade_point5
+
+    def compute_grade_6():
+        grade_6th=str(grade6_entry.get())
+
+        if grade_6th == "A":
+            grade_point6 = float(A)
+        elif grade_6th == "A-":
+            grade_point6 = float(Aminus)
+        elif grade_6th == "B+":
+            grade_point6 = float(Bplus)
+        elif grade_6th == "B":
+            grade_point6 = float(B)
+        elif grade_6th == "B-":
+            grade_point6 = float(Bminus)
+        elif grade_6th == "C+":
+            grade_point6 = float(Cplus)
+        elif grade_6th == "C":
+            grade_point6 = float(C)
+        elif grade_6th == "C-":
+            grade_point6 = float(Cminus)
+        elif grade_6th == "D+":
+            grade_point6 = float(Dplus)
+        elif grade_6th == "D":
+            grade_point6 = float(D)
+        elif grade_6th == "F":
+            grade_point6 = float(F)
+        else:
+            Label(text="Error",font="arial 12 bold").place(x=250,y=320)
+        
+        return grade_point6
+
+    grade_1 = compute_grade_1()
+    grade_2 = compute_grade_2()
+    grade_3 = compute_grade_3()
+    grade_4 = compute_grade_4()
+    grade_5 = compute_grade_5()
+    grade_6 = compute_grade_6()
+    
+    def compute_total_points():
+        credit_1=int(credit1_entry.get())
+        credit_2=int(credit2_entry.get())
+        credit_3=int(credit3_entry.get())
+        credit_4=int(credit4_entry.get())
+        credit_5=int(credit5_entry.get())
+        credit_6=int(credit6_entry.get())
+
+        grade_point_1 = grade_1 * credit_1
+        grade_point_2 = grade_2 * credit_2
+        grade_point_3 = grade_3 * credit_3
+        grade_point_4 = grade_4 * credit_4
+        grade_point_5 = grade_5 * credit_5
+        grade_point_6 = grade_6 * credit_6
+
+        total_points = (grade_point_1 +grade_point_2 + grade_point_3 + grade_point_4 + grade_point_5 + grade_point_6)
+        Label(text=f"{total_points:.1f}    ",font="arial 12 bold").place(x=250,y=320)
+
+        return total_points
+
+    total_points = (compute_total_points())
+
+    return total_points
+
+def add_credits():
+    credit_1=int(credit1_entry.get())
+    credit_2=int(credit2_entry.get())
+    credit_3=int(credit3_entry.get())
+    credit_4=int(credit4_entry.get())
+    credit_5=int(credit5_entry.get())
+    credit_6=int(credit6_entry.get())
 
 
-# Function to update expression
-# in the text entry box
-def press(num):
-	# point out the global expression variable
-	global expression
+    total_credits=(credit_1 + credit_2 + credit_3 + credit_4 + credit_5 + credit_6)
+    Label(text=f"{total_credits}",font="arial 12 bold").place(x=250,y=350)
 
-	# concatenation of string
-	expression = expression + str(num)
+    return total_credits
 
-	# update the expression by using set method
-	equation.set(expression)
+def compute_GPA(Grade_Points, Credits):
+    GPA = (Grade_Points / int(Credits))
+    Label(text=f"{GPA:.2f}     ",font="arial 12 bold").place(x=250,y=380)
 
+    return GPA
 
-# Function to evaluate the final expression
-def equalpress():
-	# Try and except statement is used
-	# for handling the errors like zero
-	# division error etc.
+def compute_percentile(GPA):
 
-	# Put that code inside the try block
-	# which may generate the error
-	try:
+    grade_pa = GPA
 
-		global expression
+    if grade_pa== 4:
+        percent = "95th percentile"
+    elif grade_pa >= 3.5:
+        percent = "90th percentile"
+    elif grade_pa >= 3:
+        percent = "85th percentile"
+    elif grade_pa >= 2.5:
+        percent = "80th percentile"
+    elif grade_pa >= 2:
+        percent = "75th percentile"
+    elif grade_pa >= 1.5:
+        percent = "70th percentile"
+    elif grade_pa >= 1:
+        percent = "65th percentile"
+    else:
+        percent = "Below 65th percentile"
 
-		# eval function evaluate the expression
-		# and str function convert the result
-		# into string
-		total = str(eval(expression))
-
-		equation.set(total)
-
-		# initialize the expression variable
-		# by empty string
-		expression = ""
-
-	# if error is generate then handle
-	# by the except block
-	except:
-
-		equation.set(" error ")
-		expression = ""
+    Label(text=f"{percent}",font="arial 12 bold").place(x=250,y=410)
 
 
-# Function to clear the contents
-# of text entry box
-def clear():
-	global expression
-	expression = ""
-	equation.set("")
 
+# title
+title=Label(root,text="Grade Point Average", font="arial 18")
+title.place(x=150,y=10)
+title2=Label(root,text="Calculator", font="arial 18")
+title2.place(x=200,y=40)
 
-# Driver code
-if __name__ == "__main__":
-	# create a GUI window
-	gui = Tk()
+# catergory sub_titles
+classes=Label(root,text="Classes", font="arial 14")
+classes.place(x=80,y=80)
+Letter_grade=Label(root,text="Letter grades", font="arial 14")
+Letter_grade.place(x=200,y=80)
+credits=Label(root,text="Credits", font="arial 14")
+credits.place(x=360,y=80)
 
-	# set the background colour of GUI window
-	gui.configure(background="gray")
+# results
+grade_tot=Label(root,text="Total Grade Points:", font="arial 12")
+credits_tot=Label(root,text="Total Credits:", font="arial 12")
+gpa=Label(root,text="GPA:", font="arial 12")
+percentile=Label(root,text="Percentile:", font="arial 12")
 
-	# set the title of GUI window
-	gui.title("GPA Calculator")
+# cordinates for results
+grade_tot.place(x=50,y=320)
+credits_tot.place(x=50,y=350)
+gpa.place(x=50,y=380)
+percentile.place(x=50,y=410)
 
-	# set the configuration of GUI window
-	gui.geometry("460x520")
+# classes entry
+sub1=Entry(root,font="arial 12",width=15)
+sub2=Entry(root,font="arial 12",width=15)
+sub3=Entry(root,font="arial 12",width=15)
+sub4=Entry(root,font="arial 12",width=15)
+sub5=Entry(root,font="arial 12",width=15)
+sub6=Entry(root,font="arial 12",width=15)
 
-	# StringVar() is the variable class
-	# we create an instance of this class
-	equation = StringVar()
+# cordinates for Classes
+sub1.place(x=50,y=120)
+sub2.place(x=50,y=150)
+sub3.place(x=50,y=180)
+sub4.place(x=50,y=210)
+sub5.place(x=50,y=240)
+sub6.place(x=50,y=270)
+    
+# Takes grade value from entry
+grade1value=StringVar()
+grade2value=StringVar()
+grade3value=StringVar()
+grade4value=StringVar()
+grade5value=StringVar()
+grade6value=StringVar()
 
-	# create the text entry box for
-	# showing the expression .
-	expression_field = Entry(gui, textvariable=equation)
+grade1_entry=Entry(root,textvariable=grade1value,font="arial 12",width=2)
+grade2_entry=Entry(root,textvariable=grade2value,font="arial 12",width=2)
+grade3_entry=Entry(root,textvariable=grade3value,font="arial 12",width=2)
+grade4_entry=Entry(root,textvariable=grade4value,font="arial 12",width=2)
+grade5_entry=Entry(root,textvariable=grade5value,font="arial 12",width=2)
+grade6_entry=Entry(root,textvariable=grade6value,font="arial 12",width=2)
 
-	# grid method is used for placing
-	# the widgets at respective positions
-	# in table like structure .
-	expression_field.grid(columnspan=4, ipadx=120)
+# Letter Grade entry cordinates
+grade1_entry.place(x=250,y=120)
+grade2_entry.place(x=250,y=150)
+grade3_entry.place(x=250,y=180)
+grade4_entry.place(x=250,y=210)
+grade5_entry.place(x=250,y=240)
+grade6_entry.place(x=250,y=270)
 
-	# create a Buttons and place at a particular
-	# location inside the root window .
-	# when user press the button, the command or
-	# function affiliated to that button is executed .
+# Takes credits value from entry
+credit1value=IntVar()
+credit2value=IntVar()
+credit3value=IntVar()
+credit4value=IntVar()
+credit5value=IntVar()
+credit6value=IntVar()
 
-	button1 = Button(gui, text=' 1 ', fg='black', bg='white',
-					command=lambda: press(1), height=1, width=7)
-	button1.grid(row=2, column=0)
+credit1_entry=Entry(root,textvariable=credit1value,font="arial 12",width=1)
+credit2_entry=Entry(root,textvariable=credit2value,font="arial 12",width=1)
+credit3_entry=Entry(root,textvariable=credit3value,font="arial 12",width=1)
+credit4_entry=Entry(root,textvariable=credit4value,font="arial 12",width=1)
+credit5_entry=Entry(root,textvariable=credit5value,font="arial 12",width=1)
+credit6_entry=Entry(root,textvariable=credit6value,font="arial 12",width=1)
 
-	button2 = Button(gui, text=' 2 ', fg='black', bg='white',
-					command=lambda: press(2), height=1, width=7)
-	button2.grid(row=2, column=1)
+# credit entry cordinates
+credit1_entry.place(x=390,y=120)
+credit2_entry.place(x=390,y=150)
+credit3_entry.place(x=390,y=180)
+credit4_entry.place(x=390,y=210)
+credit5_entry.place(x=390,y=240)
+credit6_entry.place(x=390,y=270)
 
-	button3 = Button(gui, text=' 3 ', fg='black', bg='white',
-					command=lambda: press(3), height=1, width=7)
-	button3.grid(row=2, column=2)
+# buttons Attributes
+Button(text="Calculate", font="arial 15", bg="white",bd=10,width=8,command=main).place(x=50,y=480)
+Button(text="Exit", font="arial 15",bg="white",bd=10,width=8,command=lambda:exit()).place(x=350,y=480)
 
-	button4 = Button(gui, text=' 4 ', fg='black', bg='white',
-					command=lambda: press(4), height=1, width=7)
-	button4.grid(row=3, column=0)
-
-	button5 = Button(gui, text=' 5 ', fg='black', bg='white',
-					command=lambda: press(5), height=1, width=7)
-	button5.grid(row=3, column=1)
-
-	button6 = Button(gui, text=' 6 ', fg='black', bg='white',
-					command=lambda: press(6), height=1, width=7)
-	button6.grid(row=3, column=2)
-
-	button7 = Button(gui, text=' 7 ', fg='black', bg='white',
-					command=lambda: press(7), height=1, width=7)
-	button7.grid(row=4, column=0)
-
-	button8 = Button(gui, text=' 8 ', fg='black', bg='white',
-					command=lambda: press(8), height=1, width=7)
-	button8.grid(row=4, column=1)
-
-	button9 = Button(gui, text=' 9 ', fg='black', bg='white',
-					command=lambda: press(9), height=1, width=7)
-	button9.grid(row=4, column=2)
-
-	button0 = Button(gui, text=' 0 ', fg='black', bg='white',
-					command=lambda: press(0), height=1, width=7)
-	button0.grid(row=5, column=0)
-
-	plus = Button(gui, text=' + ', fg='black', bg='white',
-				command=lambda: press("+"), height=1, width=7)
-	plus.grid(row=2, column=3)
-
-	minus = Button(gui, text=' - ', fg='black', bg='white',
-				command=lambda: press("-"), height=1, width=7)
-	minus.grid(row=3, column=3)
-
-	multiply = Button(gui, text=' * ', fg='black', bg='white',
-					command=lambda: press("*"), height=1, width=7)
-	multiply.grid(row=4, column=3)
-
-	divide = Button(gui, text=' / ', fg='black', bg='white',
-					command=lambda: press("/"), height=1, width=7)
-	divide.grid(row=5, column=3)
-
-	equal = Button(gui, text=' = ', fg='black', bg='white',
-				command=equalpress, height=1, width=7)
-	equal.grid(row=5, column=2)
-
-	clear = Button(gui, text='Clear', fg='black', bg='white',
-				command=clear, height=1, width=7)
-	clear.grid(row=5, column='1')
-
-	Decimal= Button(gui, text='.', fg='black', bg='white',
-					command=lambda: press('.'), height=1, width=7)
-	Decimal.grid(row=6, column=0)
-	# start the GUI
-	gui.mainloop()
+root.mainloop()
