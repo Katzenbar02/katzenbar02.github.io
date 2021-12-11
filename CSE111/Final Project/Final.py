@@ -12,6 +12,8 @@ def main():
     compute_percentile(GPA)
 
 def add_grade_points():
+
+    # Letter Grade convertion to numbers
     A = 4.0
     Aminus = 3.7
     Bplus = 3.3
@@ -211,6 +213,7 @@ def add_grade_points():
     grade_5 = compute_grade_5()
     grade_6 = compute_grade_6()
     
+    # Total Grade Points based on credits
     def compute_total_points():
         credit_1=int(credit1_entry.get())
         credit_2=int(credit2_entry.get())
@@ -277,8 +280,6 @@ def compute_percentile(GPA):
         percent = "Below 65th percentile"
 
     Label(text=f"{percent}",font="arial 12 bold").place(x=250,y=410)
-
-
 
 # title
 title=Label(root,text="Grade Point Average", font="arial 18")
