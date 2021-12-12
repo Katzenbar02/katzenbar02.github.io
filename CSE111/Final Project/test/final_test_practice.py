@@ -1,7 +1,7 @@
 """Verify that the make_full_name, extract_family_name, and
 extract_given_name functions work correctly.
 """
-from Final import add_grade_points, add_credits, compute_GPA, compute_percentile 
+from final_practice import add_grade_points, add_credits, compute_GPA, compute_percentile 
 import pytest
 
 
