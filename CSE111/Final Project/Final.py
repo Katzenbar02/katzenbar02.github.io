@@ -229,10 +229,10 @@ def add_grade_points():
         grade_point_5 = grade_5 * credit_5
         grade_point_6 = grade_6 * credit_6
 
-        total_points = (grade_point_1 +grade_point_2 + grade_point_3 + grade_point_4 + grade_point_5 + grade_point_6)
+        total_points = (grade_point_1 + grade_point_2 + grade_point_3 + grade_point_4 + grade_point_5 + grade_point_6)
         Label(text=f"{total_points:.1f}                                    ",font="arial 12 bold").place(x=250,y=320)
 
-        return total_points
+        return round(total_points , 1)
 
     total_points = (compute_total_points())
 
@@ -256,7 +256,7 @@ def compute_GPA(Grade_Points, Credits):
     GPA = (Grade_Points / int(Credits))
     Label(text=f"{GPA:.2f}     ",font="arial 12 bold").place(x=250,y=380)
 
-    return GPA
+    return float(round(GPA, 2))
 
 def compute_percentile(GPA):
 
@@ -279,7 +279,10 @@ def compute_percentile(GPA):
     else:
         percent = "Below 65th percentile"
 
-    Label(text=f"{percent}",font="arial 12 bold").place(x=250,y=410)
+
+
+    Label(text=f"{percent}                        ",font="arial 12 bold").place(x=250,y=410)
+    return percent
 
 # title
 title=Label(root,text="Grade Point Average", font="arial 18")
