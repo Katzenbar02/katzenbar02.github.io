@@ -1,0 +1,29 @@
+Please take a few minutes to reflect on your experience in CSE 111 and
+think about the challenges, successes, and all that you've learned
+along the way.
+
+
+Now, please respond thoroughly (1 - 2 paragraphs for each question) to
+the following questions.
+
+1. Describe an experience you had this semester where you saw the power of
+functions.
+    I saw the power of functions when I discovered how to use neseted funtions and paramteters and arguments. 
+    Nested funtions are incredible to have the values and variables in one function transfer to another function or several.
+    During my last assignment I had several nested functions inside one function and I was able to use the variables inside the funtion with the nested funtions.
+
+    On the same note of nested functions, using parameters and arguments it is possible to call variables from one function and use those variables in as arguments.
+    
+2. In your judgment, what is the value of test functions?
+    Test functions are usful to test obscure values. There is use in test funtions; however, I do feel that if you manually fix code there is no need to have test funtctions.
+    Test functions are especially useful for when there are plenty of functions that need to be tested.
+     Its challenging to make sure every piece of code is working no matter what.
+
+
+
+3. Describe your process for troubleshooting and fixing a program that
+has a problem. What is one thing you can do to improve your process?
+    I troubleshoot by experimenting with the code until something works.
+     It is very time consuming but I feel I learn so much and gain so much experience by practicing and experimenting.
+     I can more effectivly improve my process by looking up online how to fix my problem when there is an error.
+
