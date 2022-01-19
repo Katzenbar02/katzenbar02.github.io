@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="uft-8">
+<title>testCode</title>
+</head>
+    <script>
+        function calcF() {
+            let maxC = document.getElementById("cels").value;
+            let table = "<table border='1' align='center'><tr><th>Celsius</th><th>Fahrenheit</th></tr>";
+            for(c=0;c<=maxC;c++) {
+                let f = c * 1.8 + 32;
+                table += "<tr><td>" + c + "&deg;</td><td>" + f.toFixed(0) +
+                "&deg;</td></tr>";
+            }
+            table += "</table>";
+            document.getElementById("output").innerHTML = table;
+        }
+    </script>
+<body>
+    <input type="number" id="cels" placeholder="Max Celsisus Value">
+    <button onclick="calcF()">Calculate Fahrenheit</button><br><br>
+    <div id="output"></div>
+
+
+</body>
+</html>

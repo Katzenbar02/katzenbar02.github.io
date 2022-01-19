@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="uft-8">
+<title>fiveTimes</title>
+</head>
+    <script>
+        /*Defining Table
+            Input- The page loads the function fiveFuction() on load
+
+            Processing- There is a table that sets up the headers of "Multiples" and "Results";
+                        m (multiple) starts off as 0 and ends when less than or equal to 12, m goes up by 1 every loop;
+                        result equals m times 5; the variable "table" adds a new condition to write "m" and "result"
+
+            Output- The multiples of 5 going up from 0 to 12
+
+        */
+
+        function fiveFunction() {
+            let table = "<table border='5' align='center'><tr><th>Multiples</th><th>Results</th></tr>";
+            for(m=0;m<=12;m++) {
+                let result = m * 5;
+                table += "<tr><tr><td>" + m + "</td><td>" + result +
+                "</td></tr>";
+            }
+            document.getElementById("output").innerHTML = table;
+        }
+    </script>
+<body onload="fiveFunction()">
+    <div align="center">
+        <h1>Multiples of 5!</h1>
+        <h3>Here are all the multiples of 5 all the way up to twelve!</h3>
+    </div>
+    <div id="output"></div>
+
+</body>
+</html>

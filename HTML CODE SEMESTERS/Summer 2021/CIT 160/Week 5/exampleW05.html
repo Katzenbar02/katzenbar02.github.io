@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="uft-8">
+<title>exampleW05</title>
+
+    <script>
+        /*Defining Table
+            Input- 
+
+            Processing- 
+
+            Output- 
+
+        */
+
+        function doInputOutput() {
+            let sideL1 = parseFloat(document.getElementById("sl1").value);
+            let sideL2 = parseFloat(document.getElementById("sl2").value);
+            let sideL3 = parseFloat(document.getElementById("sl3").value);
+            let pl = parseFloat(document.getElementById("lp").value);
+            let pv = prismVolume(sideL1, sideL2, sideL3, pl);
+            
+                document.getElementById("output").innerHTML = "The prism volume is " +
+                pv.toFixed(2);
+        }
+       function prismVolume(sl1,sl2,sl3,lp) {
+           let ta = triangleArea(sl1,sl2,sl3);
+           let vol = ta * lp
+           return vol;
+       }
+       function triangleArea(sa1,sa2,sa3) {
+           let semi = (sa1 + sa2 + sa3) / 2;
+           let triArea = Math.sqrt(semi * (semi - sa1) * (semi - sa2) * (semi - sa3));
+           return triArea
+       }
+    </script>
+</head>
+<body>
+    <input type="number" id="sl1" placeholder="First Side Length"><br>
+    <input type="number" id="sl2" placeholder="Second Side Length"><br>
+    <input type="number" id="sl3" placeholder="Third Side Length"><br>
+    <input type="number" id="lp" placeholder="Prism Length"><br>
+    <button onclick="doInputOutput()">Calculate Volume</button><br>
+    <div id="output"></div>
+</body>
+</html>

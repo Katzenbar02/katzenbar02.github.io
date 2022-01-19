@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>startEndDivisor</title>
+    <script>
+    /*Defining Table
+            Input- The "start", "end", and "devisor" numbers
+
+            Processing- The user inputs numbers into The "start", "end", and "devisor" text boxes,
+                next all numbers beginning with the "start" number are counted by 1 all the way up to the "end" number,
+                then all the numbers inbetween are are divided by the "devisor" number and if there is 0 remaining then
+                it is output.
+
+            Output- All the numbers inbetween the "start" and "end" numbers that are diviable by the devisor
+
+        */
+
+        function inbetween() {
+            let starting = parseFloat(document.getElementById("start").value);
+            let ending = parseFloat(document.getElementById("end").value);
+            let divider = parseFloat(document.getElementById("divisor").value);
+            let allIn = "";
+
+            for (let i=starting; i <= ending; i++) {
+                if ((i >= starting) && (i % divider == 0)) {
+                    allIn += i + " ";
+
+                }
+                document.getElementById("output").innerHTML = allIn;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Inbetween numbers</h1>
+    <h3>All the numbers divisable by the divisor inbetween the Start and End numbers!</h3>
+    Start: <input type="number" id="start" size="5"><br>
+    End: <input type="number" id="end" size="5"><br>
+    Divisor: <input type="number" id="divisor" size="5"><br>
+    <button type="button" onclick="inbetween()">Click</button>
+    <div id="output"></div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+
+<!doctype html>
+<html lang= "en-us">
+    <head>
+        <title> Template</title>
+        <meta charset= "utf-8">
+        <style>
+             * {text-align: center;}
+           
+        </style>
+    </head>
+<body>
+    <script>
+      function alarm() {
+          var now = new Date();
+          var month = now.getMonth();
+          var dayOfMonth = now.getDate();
+          var dayOfWeek = now.getDay();
+          var message;
+            /* This was$ if (dayOfWeek == !0 && !6) { $before, but that would mean that it would have be both Sunday AND Monday for it to be true,
+                 and since thats impossible, line "Time to get up my dude." would never execute.
+            */
+          if (dayOfWeek == !0 || !6) {
+              message = "Time to get up my dude.";              /*orignal brackets*/
+              }
+            else {
+                message = "Time to sleep in my dude.";
+              } 
+              /* Also i found that if you put the 3 IF statements between brackets then it looks at the origianl brackets
+               (sees if that is true or false) then continues to the secondary brackets.
+              */
+              { /*<--this is what im taking about right here*/
+          if (month == 0 && dayOfMonth == 1) {
+                message = "Time to sleep in my dude.";
+          }
+          else if (month == 6 && dayOfMonth == 4) {
+                message = "Time to sleep in my dude.";          /*secondary brackets*/
+          }
+          else if (month == 11 && dayOfMonth == 25) {
+                message = "Time to sleep in my dude.";
+          }} /*<--this is what im taking about right here*/
+          document.getElementById("alarm").innerHTML = message;
+      }   
+    </script>
+    <button type ="button" onclick="alarm()" >alarm?</button>
+    <div id = "alarm"></div>
+</body>
+</html>

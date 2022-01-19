@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="uft-8">
+<title>powers</title>
+</head>
+    <script>
+        /*Defining Table
+            Input- The page loads the function pwers() on load
+
+            Processing- The function has p (powers) equal 0 and end once it reaches 31, p goes up by 1;
+                        the result equals 2 to the power (**) of p (0-31)
+
+            Output- The powers of 2 going from 0 to 32
+
+        */
+
+        function pwers() {
+            let table = "<table border='5' align='center'><tr><th>Powers</th><th>Results</th></tr>";
+            for(p=0;p<=31;p++) {
+                let result = 2 ** p;
+                table += "<tr><tr><td>" + 2 + "<sup>" + p + "</sup>" + "</td><td>" + result +
+                "</td></tr>";
+            }
+            document.getElementById("output").innerHTML = table;
+        }
+    </script>
+<body onload="pwers()">
+    <div align="center">
+        <h1>Powers of 2!</h1>
+        <h3>Here are all the powers of 2 from 0 to 31!</h3>
+    </div>
+    <div id="output"></div>
+
+</body>
+</html>

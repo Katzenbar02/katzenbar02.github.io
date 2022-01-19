@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="uft-8">
+<title>windChill</title>
+
+    <script>
+        /*Defining Table
+            Input- temperature and wind speed is input by the user
+
+            Processing- input by user is pt into doInputOutput function, those inouts are then fed into the windChill function
+                where wind chill is calculated in the variable windChillF: 35.74 + (0.6215 * tempF) - (35.75 * Math.pow(speed,0.16))
+                 + (0.4275 * (tempF * Math.pow(speed,0.16))); where it then fed back  as chillW in the doInputOuput function,
+                  where it the output is shown
+
+            Output- Wind chill in fahrenheit
+
+        */
+
+//inputs from user turned into variables
+        function doInputOutput() {
+            let tempFar = parseFloat(document.getElementById("temp").value);
+            let sWind = parseFloat(document.getElementById("wSpeed").value);
+            let chillW = windChill(tempFar, sWind);
+//output to user
+            document.getElementById("output").innerHTML = "The wind chill is " +
+            chillW.toFixed(2) + " F&deg;";
+        }
+        
+//function called to calculate wind chill
+        function windChill(tempF, speed) {
+            let windChillF = 35.74 + (0.6215 * tempF) - (35.75 * Math.pow(speed,0.16)) + (0.4275 * (tempF * Math.pow(speed,0.16)));
+            return windChillF
+        }
+
+    </script>
+</head>
+<body>
+
+<!-- text that user sees -->
+    <h1>Wind Chill</h1>
+    <input type="number" id="temp" placeholder="Temperture (F&deg;)"><br>
+    <input type="number" id="wSpeed" placeholder="Wind Speed (MPH)"><br>
+    <button onclick="doInputOutput()">Wind Chill</button><br>
+    <div id="output"></div>
+
+</body>
+</html>

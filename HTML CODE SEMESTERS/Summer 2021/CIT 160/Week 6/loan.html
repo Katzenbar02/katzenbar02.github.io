@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="uft-8">
+<title>loan</title>
+
+    <script>
+        /*Defining Table
+            Input- Takes inputs from user for principal, annual rate, # of years, periods per year,
+                 and # of payments paid to date
+
+            Processing- Inputs from the user are converted to variables and in the doPayment() and doBalance() functions,
+                the computePayment() and computeBalance() funtions are called and the paymentPerPeriod ((a * r) / (1 - (1 + r) ** -(n));)
+                 and payoffAmount ((a(1 + r) ** d) - ((p((1 + r) ** d - 1)) / r)) are calculated the funtions are then outputted.
+
+            Output- Payment and Balance
+
+        */
+
+// Compute payment
+        function doPayment() {
+            let borrowed = parseFloat(document.getElementById("amountB").value);
+            let interestRate = parseFloat(document.getElementById("annualIR").value);
+            let numberYears = parseFloat(document.getElementById("numberOY").value);
+            let paymentsYears = parseFloat(document.getElementById("paymentsPY").value);
+
+            let payment = computePayment(borrowed,interestRate,numberYears,paymentsYears);
+            
+            document.getElementById("output").innerHTML = "$".bold() + payment.toFixed(2).bold();
+        }
+        function computePayment (principal, annualRate, years, periodsPerYear) {
+            let a = principal;
+            let r = annualRate / periodsPerYear;
+            let n = years * periodsPerYear;
+            
+            let paymentPerPeriod = (a * r) / (1 - (1 + r) ** -(n));
+                    return paymentPerPeriod;
+        }
+
+// Compute payoff
+        function doBalance() {
+            let borrowed = parseFloat(document.getElementById("amountB").value);
+            let interestRate = parseFloat(document.getElementById("annualIR").value);
+            let numberYears = parseFloat(document.getElementById("numberOY").value);
+            let paymentsYears = parseFloat(document.getElementById("paymentsPY").value);
+            let numPtD = parseFloat(document.getElementById("numberOPPTD").value);
+
+            let balance = computeBalance(borrowed,interestRate,numberYears,paymentsYears,numPtD);
+            
+            document.getElementById("output2").innerHTML = "$".bold() + balance.toFixed(2).bold();
+        }   
+
+        function computeBalance (principal, annualRate, years, periodsPerYear, numberOfPaymentPaidToDate) {
+            let a = principal; 
+            let r = annualRate / periodsPerYear; // devided/ periodsPerYear
+            let n = years * periodsPerYear;
+            let d = numberOfPaymentPaidToDate;
+            let p = ((a * r) / (1 - (1 + r) ** -(n))).toFixed(2);
+
+            let payoffAmount = (a * (1 + r) ** d) - ((p * ((1 + r) ** d - 1)) / r);
+                return payoffAmount;
+        }
+       
+    </script>
+</head>
+<body>
+
+    <h1>Loan Calculator</h1>
+<!-- Compute payment -->
+    <table>
+        <div style="line-height:25px">
+            <tr><td>  Amount Borrowed (Principal):</td><td> <input type="number" id="amountB" placeholder="e.g. 80000"></td></tr> 
+            <tr><td>  Annual Interest Rate:</td><td> <input type="number" id="annualIR" placeholder="e.g. 0.05"></td></tr> 
+            <tr><td>  Number of Years:</td><td> <input type="number" id="numberOY" placeholder="e.g. 30"> </td></tr>
+            <tr><td>  Payments Per Year:</td><td> <input type="number" id="paymentsPY" placeholder="e.g. 12"></td></tr>
+        </div>
+
+        <th><tr><td> <button onclick="doPayment()">Compute Payment</button></td><td>
+        <div id="output"></div></td></tr>
+
+<!-- Compute payoff -->
+        <div style="line-height:25px">
+            <tr><td>  Number of Payments Paid to Date: </td><td><input type="number" id="numberOPPTD" placeholder="e.g. 180">
+        </div>
+        <tr><td>  <button onclick="doBalance()">Compute Payoff Amount</button> </td><td>
+        <div id="output2"></div> </td></tr> <br><br>
+    </table>
+</body>
+</html>

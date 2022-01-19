@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>trueOrFalse</title>
+    <script>
+        /* Input:       User types in numbers in the text box
+
+        * Processing:   The numbers typed in go through calcNum funtion,
+                            if both numbers are greater than 5 or if the sum of the two numbers
+                             are greater than 20 then the output is "True" otherwise the output is "False"
+
+        * Output:       True or False
+        */
+
+        function calcNum() {
+            
+            let firstNum = parseFloat(document.getElementById("one").value);
+            let secondNum = parseFloat(document.getElementById("two").value);
+            
+            if ((firstNum > 5 && secondNum > 5) || (firstNum + secondNum > 20)) {
+                document.getElementById("output").innerHTML =
+                "True";
+            }
+            else {
+                document.getElementById("output").innerHTML =
+                "False";
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1>Numbers bigger than 5 or sum larger than 20!</h1>
+    <h3>Type in two numbers in the input box and if both numbers are bigger than 5,
+         then it will be true! <br>Likewise, if the sum of the two numbers is larger than 20,
+          then it will also be true!</h3>
+    Please enter two numbers: <br>
+    <input type="number" id="one" size="5">
+    <input type="number" id="two" size="5">
+    <button type="button" onclick="calcNum()">Click</button>
+    <div id="output"></div>
+</body>
+</html>

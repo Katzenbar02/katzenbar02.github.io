@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>sumOdds</title>
+    <script>
+        /*Input- Input integer number
+        
+        // Processing- The code uses the integer the user typed in and adds all the odd integers together
+
+         Output- Sum of all odd integers less than or equal to integer typed in
+         */
+        function addOdds() {
+            let inputNum = parseFloat(document.getElementById("maxNum").value);
+            let sum = 0;
+
+            for(x=1; x <= inputNum; x++) {
+                if(x % 2 != 0) {
+                    sum += x;
+                }
+            document.getElementById("sum").innerHTML = sum;
+            }
+       }
+    </script>
+</head>
+<body>
+    <h1>Add Odd Numbers</h1>
+    <h3>Want to know the sum of odd numbers?</h3><br> 
+    <p>Enter the max number and we will add all the odd integers together!</p>
+
+    <input type = "number" id = "maxNum" placeholder="Max number">
+    <button type="button" onclick="addOdds()" >All Odd Numbers</button>
+    <div id = "sum"></div>
+</body>
+</html>

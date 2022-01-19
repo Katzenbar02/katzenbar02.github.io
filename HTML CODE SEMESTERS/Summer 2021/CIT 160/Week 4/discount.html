@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>discount</title>
+    <script>
+        /*Input- User types in their subtotal for purchases
+        
+        Processing- If days are Tuesday or Wednesday,
+         the subtotal is multiplied by .9 to get 10% off.
+          After the subtotal is multiplied by 1.06 to get sales tax and get total ammount due.
+
+          Subtotal > 50 && (Tuesday || Wednesday);
+          amount due = subtotal %10 off with 6% sales tax
+
+        Sub total           Day                           Discount applied
+        $0-50               Monday-Sunday (except T&W)          F
+                            Tueday & Wednesday                  F
+
+        $50.01-infinite     Monday-Sunday (except T&W)          F
+                            Tueday & Wednesday                  T
+
+        Output- amount due
+        */
+        function calcDiscount() {
+
+        let salesTax = 1.06;
+        let discount = .9;
+        let subTotal = parseFloat(document.getElementById("subT").value);
+        var dayOfWeek = new Date().getDay();
+
+        if (subTotal > 50 && (dayOfWeek == 2 || dayOfWeek == 3)) {
+            amountDue = (subTotal * discount) * salesTax;
+
+            document.getElementById("output").innerHTML =
+            "You qualify for a discount! " + "Your total amount due is " +
+              (amountDue.toFixed(2));
+
+        }else {
+            amountDue = subTotal * salesTax;
+            document.getElementById("output").innerHTML =
+            "The amount due is $" + (amountDue.toFixed(2));
+            }
+
+}
+    
+    </script>
+</head>
+<body>
+    <h1>Do you qualify for a discount?</h1>
+    <h3>Type in your subtotal and see how much you can save!</h3>
+    <p>*Discounts are only valid on Tuesdays and Wednesdays*</p>
+
+    Type in your subtotal: $<input type="number" id="subT" placeholder= Subtotal><br><br>
+   
+    <button type="button" onclick="calcDiscount()">Amount Due</button><br>
+    <div id = "output"></div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>footwear</title>
+    <script>
+        /*Input- the weather outside (hot, rain, snow)
+
+        Processing- user inputs and goes through to see if its hot cold, or snow
+        
+        Output- outputs either sandals, galoshes, boots, or shoes
+        */
+
+        /* OPTIONS
+        hot	sandals
+        rain	galoshes
+        snow	boots
+        */
+        
+        function shoeChoice(){
+
+            let weather = document.getElementById("inputWeather").value;
+            let shoesT;
+
+                switch (weather.toLowerCase())
+               { case "hot":
+                   shoesT = "sandals";
+                   break;
+                   case "rain":
+                   shoesT = "galoshes";
+                   break;
+                   case "snow":
+                   shoesT = "boots";
+                   break;
+                   default:
+                   shoesT = "shoes";
+                   break;
+        }
+               
+
+            document.getElementById("shoeChoice").innerHTML=
+             "It's gonna be a little " + weather +
+              " I would suggest wearing " + shoesT + " today";
+    }
+    </script>
+</head>
+<body>
+    <h1>What footwear should I wear today?</h1>
+    
+    What is the weather like today?<input type="text" id="inputWeather"><br>
+    <button type="button" onclick="shoeChoice()">Try it</button><br>
+    <div id = "shoeChoice"></div>
+
+</body>
+</html>

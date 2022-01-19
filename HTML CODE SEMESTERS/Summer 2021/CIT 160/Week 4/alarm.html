@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>alarm</title>
+    <script>
+        /*Input- Code checks the day of the week, and day of the month
+        
+        
+        Processing- weekends - "Sleep in."
+        weekdays -"Get up!"
+            except
+                 January 1 (New Year’s Day),
+                  July 4 (U.S. Independence Day),
+                   and December 25 (Christmas)
+
+        Output-  “Get up!” or “Sleep in.”
+        */
+function alarm(){
+        var now = new Date();
+        var month = now.getMonth();
+        var dayOfMonth = now.getDate();
+        var dayOfWeek = now.getDay();
+
+        let jan1 = (dayOfMonth == 1 && month == 0);
+        let jul4 = (dayOfMonth == 4 && month == 6);
+        let dec25 = (dayOfMonth == 25 && month == 11);
+
+        if ((dayOfWeek >=1 && dayOfWeek <=5) && (!jan1 && !jul4 && !dec25)) {
+            document.getElementById("output").innerHTML =
+                "Get up!";
+        }
+        else {
+            document.getElementById("output").innerHTML =
+                "Sleep in."
+        }
+    }
+    </script>
+    
+</head>
+<body onload="alarm()">
+<div id= "output"></div>
+
+</body>
+</html>

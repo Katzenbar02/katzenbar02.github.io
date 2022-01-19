@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="uft-8">
+<title>invest</title>
+
+    <script>
+        /*Defining Table
+            Input- Takes inputs from user for principal, annual rate, # of years, and periods per year
+
+            Processing- On click the function doFV() is loaded and inputs from user are converted to variables,
+                values from user are then called to computeFutureValue() where total number of periods (n) is calculated by
+                multiplying periodsPerYear by years, then FutureValue is calculated (principal * Math.pow(1 + annualRate,n)),
+                that value is then returned to doFV() as computeFV() where it is then outputted
+
+            Output- Future value
+
+        */
+
+        function doFV () {
+            let amountInv = parseFloat(document.getElementById("princ").value);
+            let annualRat = parseFloat(document.getElementById("annRate").value);
+            let numberOY = parseFloat(document.getElementById("numOfYear").value);
+            let periodPY = parseFloat(document.getElementById("periodPerY").value);
+
+            let computeFV = computeFutureValue(amountInv,annualRat,numberOY,periodPY);
+            
+            document.getElementById("output").innerHTML = '$'.bold() + computeFV.toFixed(2).bold(); 
+        }
+
+        function computeFutureValue(principal, annualRate, years, periodsPerYear) {
+            let n = periodsPerYear * years;
+            let r = annualRate / periodsPerYear;
+            let FutureValue = principal * Math.pow(1 + r,n);
+                return FutureValue;
+        }
+       
+    </script>
+</head>
+<body>
+    <style>
+        .tab { margin-left: 20px; }
+   </style>
+
+    <h1>Invest Calculator</h1>
+    <div style="line-height:25px">
+        Amount Invested (Principal) <input class="tab" type="number" id="princ" placeholder="e.g. 100 "> <br>
+        Annual Rate <input class="tab" type="number" id="annRate" placeholder="e.g. 0.07"> <br>
+        Number of Years <input class="tab" type="number" id="numOfYear" placeholder="e.g. 10"> <br>
+        Periods per Year <input class="tab" type="number" id="periodPerY" placeholder="e.g. 4"> <br><br>
+    </div>
+
+    <button onclick="doFV()">Compute Future Value</button>
+    <div id="output"></div>
+</body>
+</html>

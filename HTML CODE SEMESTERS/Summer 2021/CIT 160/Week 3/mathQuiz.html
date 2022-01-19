@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>mathQuiz</title>
+    <script>
+        /*Input- User inputs Number A, Operator, Number B, and answer
+
+        Processing- The numbers, operator, and solution. The operator 
+        is checked with the numbers and are seen if the result matches
+         with the user answer.
+        
+        Output- The nuumber are checked and seen if true or false
+        */
+        
+        function testAnswer() {
+            let nA = parseFloat(document.getElementById("NumA").value);
+            let oP = document.getElementById("OpA").value;
+            let nB = parseFloat(document.getElementById("NumB").value);
+            let aA = parseFloat(document.getElementById("AnsA").value);
+
+            let trueAnswer;
+                switch(oP) {
+                case "+":
+                    trueAnswer = nA + nB
+                    break;
+                case "-":
+                    trueAnswer = nA - nB
+                    break;
+                case "*":
+                    trueAnswer = nA * nB
+                    break;
+                case "/":
+                    trueAnswer = nA / nB
+                    break;
+                case "%":
+                    trueAnswer = nA % nB
+                    break;
+                default:
+                 return;
+                }
+             if (aA == trueAnswer) {
+                document.getElementById("output").innerHTML = "Correct! Good job"
+            }else {
+                document.getElementById("output").innerHTML = "Incorrect. Try again!"
+            }
+        }        
+            
+    </script>
+</head>
+<body>
+    <h1>Test your math skills right here!</h1>
+    
+    <input type="text" id="NumA" placeholder = "Type any number">
+    <input type="text" id="OpA"  placeholder = "Type any operator">
+    <input type="text" id="NumB"  placeholder = "Type any number"> =
+    <input type="text" id="AnsA"  placeholder = "Type your answer">
+
+    <button type="button" onclick="testAnswer()">Solve</button><br>
+    <div id="output"></div>
+</body>
+</html>
