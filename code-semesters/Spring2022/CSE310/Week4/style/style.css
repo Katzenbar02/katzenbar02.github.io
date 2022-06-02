@@ -1,0 +1,52 @@
+header {
+    display: flex;
+    background-color: white;
+}
+
+body {
+    background-color: black;
+    margin: 0;
+}
+
+#logo_link {
+    padding-top: 5px;
+    justify-self: center;
+    align-self: center;
+}
+
+.header_logo {
+    width: 80px;
+    /* border-radius: 90px; */
+    margin-right: auto;
+}
+
+#income {
+    margin: 0;
+    background-color: green;
+    display: flex;
+}
+
+#rent {
+    margin: 0;
+    background-color: blue;
+}
+
+#groceries {
+    margin: 0;
+    background-color: yellow;
+}
+
+#restaurants {
+    margin: 0;
+    background-color: yellowgreen;
+}
+
+#amusment {
+    margin: 0;
+    background-color: purple;
+}
+
+#shopping {
+    margin: 0;
+    background-color: pink;
+}
