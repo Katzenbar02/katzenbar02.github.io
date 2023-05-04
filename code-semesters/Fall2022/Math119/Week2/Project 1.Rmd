@@ -1,0 +1,16 @@
+library(data4led)
+
+bulb <- led_bulb(1,seed = 6154)
+
+x <- bulb$hours
+y <- bulb$percent_intensity
+
+head(bulb)
+
+par(mar=c(5,5,10,10))
+plot(x,y,ylim=c(98,102),pch=100,main='Bulb 135',xlab="time (hours)",ylab='Intensity\n(normalized to initial intensity)')
+ 
+
+
+
+

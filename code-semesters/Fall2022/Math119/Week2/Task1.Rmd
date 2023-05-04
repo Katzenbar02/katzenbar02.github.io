@@ -1,0 +1,33 @@
+---
+title: "Task1"
+output: html_document
+date: "2022-09-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+First off, we load the data points from data4led. This was downloaded beforehand from devtools::install_github("byuidatascience/data4led"). The function bulb is created, which takes the data points from one bulb from a unique seed from the original data library. We take this data and unique seed to calculate the intensity (y-axis) and time (x-axis) for that one led at 44 separate points in time with varying intensity.
+
+The head function gives us six points at different hours and intensity.
+
+The par function affects the margins of the plot from bottom, left, top, and right. The plot function has filters in its function. Ylim filters the intensity to only show between 98% and 102%. The pch affects the font of the data points. Main changes the title of the plot, the xlab and ylab change the horizontal and vertical titles respectively.
+
+Within the plot, we can see that the led starts off at 100% intensity and fluctuates between 99% and up to 101%. This is interesting because the led reaches max intensity at the half-life of the led and continues onto over 100% intensity until the end of the led's lifetime.
+
+```{r bulb}
+library(data4led)
+
+bulb <- led_bulb(1,seed = 6154)
+
+x <- bulb$hours
+y <- bulb$percent_intensity
+
+head(bulb)
+
+par(mar=c(5,5,2.5,0.25))
+plot(x,y,ylim=c(98,102),pch=16,main='Bulb 135',xlab="time (hours)",ylab='Intensity\n(normalized to initial intensity)')
+```
