@@ -1,0 +1,13 @@
+08:20:14| Time to process 300 frames with 1 CPU(s): 290.08 seconds
+08:22:34| Time to process 300 frames with 2 CPU(s): 139.58 seconds
+08:24:17| Time to process 300 frames with 3 CPU(s): 102.65 seconds
+08:25:27| Time to process 300 frames with 4 CPU(s): 69.70 seconds
+08:26:23| Time to process 300 frames with 5 CPU(s): 55.91 seconds
+08:27:19| Time to process 300 frames with 6 CPU(s): 55.55 seconds
+08:28:13| Time to process 300 frames with 7 CPU(s): 53.59 seconds
+08:29:17| Time to process 300 frames with 8 CPU(s): 62.90 seconds
+08:30:08| Time to process 300 frames with 9 CPU(s): 50.31 seconds
+08:30:58| Time to process 300 frames with 10 CPU(s): 49.05 seconds
+08:31:48| Time to process 300 frames with 11 CPU(s): 48.81 seconds
+08:32:40| Time to process 300 frames with 12 CPU(s): 50.70 seconds
+08:32:40| Total Time for ALL processing: 1036.098558699945

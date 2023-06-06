@@ -2,7 +2,7 @@
 Course: CSE 251
 Lesson Week: 04
 File: assignment.py
-Author: <Your name>
+Author: <Joshua Ludwig>
 
 Purpose: Assignment 04 - Factory and Dealership
 
@@ -77,14 +77,14 @@ class Factory(threading.Thread):
     """ This is a factory.  It will create cars and place them on the car queue """
 
     def __init__(self):
-        # TODO, you need to add arguments that will pass all of data that 1 factory needs
+        # TODO, add arguments that will pass all of data that 1 factory needs
         # to create cars and to place them in a queue.
         pass
 
 
     def run(self):
         for i in range(CARS_TO_PRODUCE):
-            # TODO Add you code here
+            # TODO Add code here
             """
             create a car
             place the car on the queue
@@ -99,13 +99,13 @@ class Dealer(threading.Thread):
     """ This is a dealer that receives cars """
 
     def __init__(self):
-        # TODO, you need to add arguments that pass all of data that 1 Dealer needs
+        # TODO, to add arguments that pass all of data that 1 Dealer needs
         # to sell a car
         pass
 
     def run(self):
         while True:
-            # TODO Add your code here
+            # TODO Add code here
             """
             take the car from the queue
             signal the factory that there is an empty slot in the queue
@@ -128,9 +128,9 @@ def main():
     # i.e., update this list each time the dealer receives a car
     queue_stats = [0] * MAX_QUEUE_SIZE
 
-    # TODO create your one factory
+    # TODO create one factory
 
-    # TODO create your one dealership
+    # TODO create one dealership
 
     log.start_timer()
 

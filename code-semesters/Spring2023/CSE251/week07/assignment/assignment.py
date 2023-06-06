@@ -2,18 +2,35 @@
 Course: CSE 251
 Lesson Week: 07
 File: assingnment.py
-Author: <Your name here>
+Author: <Joshua Ludwig>
 Purpose: Process Task Files
 
-Instructions:  See I-Learn
+Instructions:  Assignment
+The assignment files is found here, create_tasks.py file and server.py file. You also need to download the file words.txt and data.txt
+Follow the instructions found in the assignment.py
+When you submit your assignment code file, describe the size of each process pool for each task type and you determined the best size of that pool.
+run the Python program create_tasks.py to create the task files.
+There are 5 different tasks that need to be processed. Each task needs to have it's own process pool. The number of processes in each pool is up to you. However, your goal is to process all of the tasks as quicky as possible using these pools. You will need to try out different pool sizes.
+The program will load a task one at a time and add it to the pool that is used to process that task type. You can't load all of the tasks into memory/list and then pass them to a pool.
+You are required to use the function apply_async() for these 5 pools. You can't use map(), or any other pool function. You must use callback functions with the apply_async() statement.
+Each pool will collect that results of their tasks into a global list. (ie. result_primes, result_words, result_upper, result_sums, result_names)
+the task_* functions contain general logic of what needs to happen
+Run the server.py program from a terminal/console program. Simply type python server.py. This server is the same one used for assignment 2. Refer to assignment 2's documention on how to start and use the server.
+Do not use try...except statements
 
 TODO
 
 Add your comments here on the pool sizes that you used for your assignment and
 why they were the best choices.
 
-
+I have 8 logical processors on my computer so I reasoned that I would need to disperse them out
+to where each logical processor would be more efficient depending on the task's complexity.
+I decided to give 3 logical processors to the prime task, 1 to the word task, 1 to the upper task, 1 to the sum task,
+and 2 to the name task. I decided to give the prime task 3 logical processors because it is the most complex task
+and I wanted to give it the most resources to complete the task.
+I was able to achieve the best results with this combination of processors.
 """
+
 
 from datetime import datetime, timedelta
 import requests
@@ -21,9 +38,9 @@ import multiprocessing as mp
 from matplotlib.pylab import plt
 import numpy as np
 import glob
-import math 
+import math
 
-# Include cse 251 common Python files - Dont change
+# Include cse 251 common Python files - Don't change
 from cse251 import *
 
 TYPE_PRIME  = 'prime'
@@ -53,7 +70,7 @@ def is_prime(n: int):
             return False
         i += 6
     return True
- 
+
 def task_prime(value):
     """
     Use the is_prime() above
@@ -62,7 +79,11 @@ def task_prime(value):
             - or -
         {value} is not prime
     """
-    pass
+    # Check if value is prime
+    if is_prime(value):
+        result_primes.append(f'{value} is prime')
+    else:
+        result_primes.append(f'{value} is not prime')
 
 def task_word(word):
     """
@@ -72,21 +93,27 @@ def task_word(word):
             - or -
         {word} not found *****
     """
-    pass
+    with open('words.txt', 'r') as file:
+        words = file.read().splitlines()
+        if word in words:
+            result_words.append(f'{word} Found')
+        else:
+            result_words.append(f'{word} not found *****')
 
 def task_upper(text):
     """
     Add the following to the global list:
         {text} ==>  uppercase version of {text}
     """
-    pass
+    result_upper.append(f'{text} ==> {text.upper()}')
 
 def task_sum(start_value, end_value):
     """
     Add the following to the global list:
         sum of {start_value:,} to {end_value:,} = {total:,}
     """
-    pass
+    total = sum(range(start_value, end_value + 1))
+    result_sums.append(f'sum of {start_value:,} to {end_value:,} = {total:,}')
 
 def task_name(url):
     """
@@ -96,18 +123,38 @@ def task_name(url):
             - or -
         {url} had an error receiving the information
     """
-    pass
+
+    response = requests.get(url)
+    if response.status_code == 200:
+        name = response.json()['name']
+        result_names.append(f'{url} has name {name}')
+    else:
+        result_names.append(f'{url} had an error receiving the information')
 
 
 def main():
     log = Log(show_terminal=True)
     log.start_timer()
 
-    # TODO Create process pools
+    # Create process pools with appropriate sizes for each task type
+    # I have 8 logical processors on my computer so the mp.pool should reflect that depedning on the intensity of the task
+    # pool = mp.Pool(1)
+    # Create process pools with appropriate sizes for each task type
+    pool_primes = mp.Pool(3)
+    pool_words = mp.Pool(1)
+    pool_upper = mp.Pool(1)
+    pool_sums = mp.Pool(1)
+    pool_names = mp.Pool(2)
 
-    # TODO you can change the following
-    # TODO start and wait pools
-    
+    pool_primes.apply_async(task_prime, args=(is_prime, ), callback=result_primes)
+    pool_words.apply_async(task_word, callback=result_words)
+    pool_upper.apply_async(task_upper, callback=result_upper)
+    pool_sums.apply_async(task_sum, callback=result_sums)
+    pool_names.apply_async(task_name, callback=result_names)
+
+
+
+   
     count = 0
     task_files = glob.glob("*.task")
     for filename in task_files:
@@ -130,7 +177,18 @@ def main():
         else:
             log.write(f'Error: unknown task type {task_type}')
 
-
+    # Wait for all the processes to finish
+    # Close the pools and wait for all tasks to complete
+    pool_primes.close()
+    pool_words.close()
+    pool_upper.close()
+    pool_sums.close()
+    pool_names.close()
+    pool_primes.join()
+    pool_words.join()
+    pool_upper.join()
+    pool_sums.join()
+    pool_names.join()
 
     # Do not change the following code (to the end of the main function)
     def log_list(lst, log):

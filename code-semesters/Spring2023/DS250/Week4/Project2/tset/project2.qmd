@@ -1,0 +1,201 @@
+---
+title: "Project 2"
+subtitle: "Course DS 250"
+author: "Joshua Ludwig"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+    
+---
+
+```{python}
+#| label: libraries
+#| include: false
+import json
+import pandas as pd
+import altair as alt
+import numpy as np
+
+from IPython.display import Markdown
+from IPython.display import display
+from tabulate import tabulate
+
+url = "https://raw.githubusercontent.com/byuidatascience/data4missing/master/data-raw/flights_missing/flights_missing.json"
+JSON = pd.read_json(url)
+```
+
+## Elevator pitch
+
+This project was where I learned how to properly use altair. If you continue to read through this project, you'll learn what airports had the worst delays. Not only that, but you'll also gain an insight on what months might have the world delays. I learned a lot with this project, please enjoy!
+
+## 1: Which airport has the worst delays?
+
+```{python}
+
+JSON['hours_delayed_total'] = JSON['minutes_delayed_total'] / 60
+
+airports = JSON.groupby('airport_name').agg({
+  'num_of_delays_total':'sum',
+  'num_of_flights_total':'sum'}
+)
+
+'''proportions = airports.assign(
+  delay_ratio = lambda x: x.num_of_delays_total / x.num_of_flights_total
+)'''
+
+proportions = airports.assign(
+ delay_ratio = lambda x: x.num_of_flights_total / x.num_of_delays_total
+)
+
+#JSON['proportions'] = JSON['num_of_delays_total'] / JSON['num_of_flights_total']
+
+chart1 = JSON.groupby('airport_code').sum().filter(items=['num_of_flights_total','num_of_delays_total', 'proportions', 'hours_delayed_total'])
+
+chart1
+
+```
+
+According to the table above, SFO has the biggest delay ratio. 1 out of every 34 planes has a delay. This shows how terribly messed up my code is. None of the data science tutors could help me, but if you find the solution. Let me know!
+
+## 2: What is the best month to fly if you want to avoid delays of any length?
+
+November is the best month to avoid delays of any length. We know this because the proportion(flights/delayedflights) in November is the lowest. This proportion basically means that there is 1 delay for every 12 flights in November (which doesn't sound accurate at all).
+
+```{python}
+
+removed = JSON[JSON["month"] != "n/a"]
+# This removes any n/a in the "month" column
+
+removed['month'] = removed['month'].replace('Febuary', 'February')
+# February was spelled wrong, so this corrected it
+
+month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+# This places the months in order
+
+removed['month'] = pd.Categorical(removed['month'], categories=month_order, ordered=True)
+# This categorized the month order
+
+chart2 = removed.groupby(by='month').sum().filter(items=['num_of_flights_total','num_of_delays_total', 'proportion'])
+# This grouped up the rows by months
+
+chart2
+
+```
+
+## 3: Create a new column that calculates the total number of flights delayed by weather (both severe and mild).
+
+The table belows shoes the total number of weather delays, including mild and severe weather. I tried to format it in a better way, but I couldn't figure it out. This assignment isn't going very well!
+
+```{python}
+
+flight_late_aircraft = JSON["num_of_delays_late_aircraft"]*.30
+
+JSON["nas"] = np.where(JSON["month"].isin(["April","May","June","July","August"]), JSON["num_of_delays_nas"]*.40, JSON["num_of_delays_nas"]*.65)
+
+JSON["total_num_of_weather_delays"] = JSON["nas"] + flight_late_aircraft + JSON["num_of_delays_weather"]
+
+#JSON.total_num_of_weather_delays.head()
+
+chart3 = JSON.total_num_of_weather_delays.head()
+
+#chart3.to_json(orient="table")
+
+json_data = JSON.to_json()
+'''json_object = json.loads('total_num_of_weather_delays')
+json_formatted_str = json.dumps(json_object, indent = 4)
+print(json_formatted_str)'''
+
+chart3
+
+```
+
+## 4: Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Discuss what you learn from this graph.
+
+I was unable to make the barplot. I ran into the error "column names must be strings". I then looked at the screen for 2 hours in utter confusion. 
+
+```{python}
+
+'''alt.Chart(proportion.reset_index()).mark_bar().encode(
+  y = alt.Y('airport_name', axis=alt.Axis(title='Airport'),
+  sort=alt.EncodingSortField(field='delay_ratio',
+  order='descending')), 
+  x = alt.X('delay_ratio', axis=alt.Axis(title='Delays per Flights', format='%'))
+)'''
+
+```
+
+## 5: Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”).
+
+On line 921, where column = "month", it says "NaN"
+
+```{python}
+
+JSON.replace('n/a', np.nan, inplace=True)
+JSON
+
+```
+
+
+## APPENDIX A (Additional Python Code)
+
+```{python}
+#paste other your code from your python file (.py) here
+# %%
+
+import pandas as pd
+import numpy as np
+
+import json
+import pandas as pd
+import altair as alt
+import numpy as np
+
+from IPython.display import Markdown
+from IPython.display import display
+from tabulate import tabulate
+
+url = "https://raw.githubusercontent.com/byuidatascience/data4missing/master/data-raw/flights_missing/flights_missing.json"
+JSON = pd.read_json(url)
+
+JSON['hours_delayed_total'] = JSON['minutes_delayed_total'] / 60
+
+JSON['proportion'] = JSON['num_of_delays_total'] / JSON['num_of_flights_total']
+
+chart1 = JSON.groupby('airport_code').sum().filter(items=['num_of_flights_total','num_of_delays_total', 'proportion', 'hours_delayed_total'])
+
+
+removed = JSON[JSON["month"] != "n/a"]
+# This removes any n/a in the "month" column
+
+removed['month'] = removed['month'].replace('Febuary', 'February')
+# February was spelled wrong, so this corrected it
+
+month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+# This places the months in order
+
+removed['month'] = pd.Categorical(removed['month'], categories=month_order, ordered=True)
+# This categorized the month order
+
+chart2 = removed.groupby(by='month').sum().filter(items=['num_of_flights_total','num_of_delays_total', 'proportion'])
+# This grouped up the rows by months
+
+# %%
+
+
+
+```

@@ -3,7 +3,7 @@
 Course: CSE 251
 Lesson Week: 03
 File: assignment.py
-Author: <Your Name>
+Author: <Joshua Ludwig>
 
 Purpose: Video Frame Processing
 
@@ -16,7 +16,6 @@ Instructions:
 
 ------------------------------------------------------------------------------
 """
-
 from matplotlib.pylab import plt  # load plot library
 from PIL import Image
 import numpy as np
@@ -29,17 +28,16 @@ from cse251 import *
 # 4 more than the number of cpu's on your computer
 CPU_COUNT = mp.cpu_count() + 4  
 
-# TODO Your final video need to have 300 processed frames.  However, while you are 
-# testing your code, set this much lower
-FRAME_COUNT = 20
+# Frames processed
+FRAME_COUNT = 300
 
 RED   = 0
 GREEN = 1
 BLUE  = 2
 
-
+# Creates a new image file from image_file and green_file
 def create_new_frame(image_file, green_file, process_file):
-    """ Creates a new image file from image_file and green_file """
+
 
     # this print() statement is there to help see which frame is being processed
     print(f'{process_file[-7:-4]}', end=',', flush=True)
@@ -59,9 +57,18 @@ def create_new_frame(image_file, green_file, process_file):
     image_new = Image.composite(image_img, green_img, mask_img)
     image_new.save(process_file)
 
+# Processes the specified number of frames using the specified number of CPUs
+def process_frames(frame_count, cpu_count):
 
-# TODO add any functions to need here
+    with mp.Pool(processes=cpu_count) as pool:
+        image_numbers = range(1, frame_count+1)
+        image_files = [rf'elephant/image{number:03d}.png' for number in image_numbers]
+        green_files = [rf'green/image{number:03d}.png' for number in image_numbers]
+        process_files = [rf'processed/image{number:03d}.png' for number in image_numbers]
 
+        start_time = timeit.default_timer()
+        pool.starmap(create_new_frame, zip(image_files, green_files, process_files))
+        return timeit.default_timer() - start_time
 
 
 if __name__ == '__main__':
@@ -74,23 +81,15 @@ if __name__ == '__main__':
     xaxis_cpus = []
     yaxis_times = []
 
-    # TODO Process all frames trying 1 cpu, then 2, then 3, ... to CPU_COUNT
-    #      add results to xaxis_cpus and yaxis_times
+    for cpu_count in range(1, CPU_COUNT+1):
+        print(f'Testing with {cpu_count} CPU(s)')
 
+        time = process_frames(FRAME_COUNT, cpu_count)
 
-    # sample code: remove before submitting  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    # process one frame #10
-    image_number = 10
+        xaxis_cpus.append(cpu_count)
+        yaxis_times.append(time)
 
-    image_file = rf'elephant/image{image_number:03d}.png'
-    green_file = rf'green/image{image_number:03d}.png'
-    process_file = rf'processed/image{image_number:03d}.png'
-
-    start_time = timeit.default_timer()
-    create_new_frame(image_file, green_file, process_file)
-    print(f'\nTime To Process all images = {timeit.default_timer() - start_time}')
-    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
+        log.write(f'Time to process {FRAME_COUNT} frames with {cpu_count} CPU(s): {time:.2f} seconds')
 
     log.write(f'Total Time for ALL processing: {timeit.default_timer() - all_process_time}')
 
