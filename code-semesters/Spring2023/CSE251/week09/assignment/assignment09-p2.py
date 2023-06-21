@@ -2,7 +2,7 @@
 Course: CSE 251 
 Lesson Week: 09
 File: assignment09-p2.py 
-Author: <Add name here>
+Author: Joshua Ludwig
 
 Purpose: Part 2 of assignment 09, finding the end position in the maze
 
@@ -18,11 +18,19 @@ change the program to display the found path to the exit position.
 
 What would be your strategy?  
 
-<Answer here>
+I would need to keep track of the path that each thread takes in a list.
+When a thread finds the end position, it is added to a list of paths.
+Since each thread travels a different path, the path will sooner or later
+be found.  Once the path is found, the program will stop all threads and
+display the path.
+
 
 Why would it work?
 
-<Answer here>
+Each thread travels a different path, and a path will be contructed to the
+end position using mutiple threads to find the end position. You can then
+see the path that was created using the threads.
+
 
 """
 import math
@@ -73,14 +81,53 @@ def get_color():
     current_color_index += 1
     return color
 
+def solve_path(maze, start, color, path_found, lock):
+    """ Find a path to the next dead end.
+    When a fork is reached, spawn a new thread for every path except 1,
+    and go down the remaining path.
+    Push all created threads to threads.
+    When a dead end is reached or path_found is True, die.
+    When the end is reached, set path_found to True.
+    """
+    global thread_count
+    with lock:
+        thread_count += 1
+
+    (row, col) = start
+    while True:
+        if path_found[0] or not maze.can_move_here(row, col):
+            return
+        with lock:
+            maze.move(row, col, color)
+        moves = maze.get_possible_moves(row, col)
+        if len(moves) == 0:
+            if maze.at_end(row, col):
+                path_found[0] = True
+            return
+        elif len(moves) > 1:
+            threads = []
+            for i in range(len(moves) - 1):
+                thread = threading.Thread(target=solve_path,
+                                          args=(maze, moves[i], get_color(), path_found, lock))
+                threads.append(thread)
+                thread.start()
+
+            for thread in threads:
+                thread.join()
+
+            (row, col) = moves[-1]
+        else:
+            (row, col) = moves[0]
+
+
 def solve_find_end(maze):
     """ finds the end position using threads.  Nothing is returned """
     # When one of the threads finds the end position, stop all of them
-    global stop
-    stop = False
-
-
-    pass
+    path_found = [False]
+    start_pos = maze.get_start_pos()
+    color = get_color()
+    lock = threading.Lock()
+    solve_path(maze, start_pos, color, path_found, lock)
 
 
 def find_end(log, filename, delay):

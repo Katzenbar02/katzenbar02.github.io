@@ -2,7 +2,7 @@
 Course: CSE 251 
 Lesson Week: 09
 File: assignment09-p1.py 
-Author: <Add name here>
+Author: Joshua Ludwig
 
 Purpose: Part 1 of assignment 09, finding a path to the end position in a maze
 
@@ -26,20 +26,36 @@ SLOW_SPEED = 100
 FAST_SPEED = 1
 speed = SLOW_SPEED
 
-# TODO add any functions
+def solve_path(maze, pos=None):
+    """ Solve the maze and return the path. The path is a list of positions, (x, y) """
+    if pos is None:
+        pos = maze.get_start_pos()
 
-def solve_path(maze):
-    """ Solve the maze and return the path found between the start and end positions.  
-        The path is a list of positions, (x, y) """
-        
-    # TODO start add code here
     path = []
+    (prow, pcol) = pos
+    moves = maze.get_possible_moves(prow, pcol)
+
+    if len(moves) == 0:
+        if maze.at_end(prow, pcol):
+            return [(prow, pcol)]
+        else:
+            return []
+
+    for (mrow, mcol) in moves:
+        maze.move(mrow, mcol, COLOR)
+        possible_path = solve_path(maze, (mrow, mcol))
+        if len(possible_path) == 0:
+            maze.restore(mrow, mcol)
+        else:
+            path = [(prow, pcol)]
+            path.extend(possible_path)
+            return path
+
     return path
 
 
 def get_path(log, filename):
-    """ Do not change this function """
-    #  'Maze: Press "q" to quit, "1" slow drawing, "2" faster drawing, "p" to play again'
+    """ Get path for a maze file """
     global speed
 
     # create a Screen Object that will contain all of the drawing commands
@@ -71,24 +87,32 @@ def get_path(log, filename):
 
 
 def find_paths(log):
-    """ Do not change this function """
-
-    files = ('verysmall.bmp', 'verysmall-loops.bmp', 
-            'small.bmp', 'small-loops.bmp', 
-            'small-odd.bmp', 'small-open.bmp', 'large.bmp', 'large-loops.bmp')
+    """ Find paths for maze files """
+    files = [
+        'verysmall.bmp',
+        'verysmall-loops.bmp',
+        'small.bmp',
+        'small-loops.bmp',
+        'small-odd.bmp',
+        'small-open.bmp',
+        'large.bmp',
+        'large-loops.bmp'
+    ]
 
     log.write('*' * 40)
     log.write('Part 1')
+
     for filename in files:
         log.write()
         log.write(f'File: {filename}')
         path = get_path(log, filename)
         log.write(f'Found path has length          = {len(path)}')
+
     log.write('*' * 40)
 
 
 def main():
-    """ Do not change this function """
+    """ Main function """
     sys.setrecursionlimit(5000)
     log = Log(show_terminal=True)
     find_paths(log)

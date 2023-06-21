@@ -31,42 +31,45 @@ creates many threads, but it will return a direct path.
 
 """
 import math
-import threading 
+import threading
 from screen import Screen
 from maze import Maze
 
 import cv2
 
-# Include cse 251 common Python files - Dont change
-import os, sys
+# Include cse 251 common Python files - Don't change
+import os
+import sys
+
 sys.path.append('../../code')
 from cse251 import *
 
 SCREEN_SIZE = 800
 COLOR = (0, 0, 255)
 COLORS = (
-    (0,0,255),
-    (0,255,0),
-    (255,0,0),
-    (255,255,0),
-    (0,255,255),
-    (255,0,255),
-    (128,0,0),
-    (128,128,0),
-    (0,128,0),
-    (128,0,128),
-    (0,128,128),
-    (0,0,128),
-    (72,61,139),
-    (143,143,188),
-    (226,138,43),
-    (128,114,250)
+    (0, 0, 255),
+    (0, 255, 0),
+    (255, 0, 0),
+    (255, 255, 0),
+    (0, 255, 255),
+    (255, 0, 255),
+    (128, 0, 0),
+    (128, 128, 0),
+    (0, 128, 0),
+    (128, 0, 128),
+    (0, 128, 128),
+    (0, 0, 128),
+    (72, 61, 139),
+    (143, 143, 188),
+    (226, 138, 43),
+    (128, 114, 250)
 )
 
 # Globals
 current_color_index = 0
 thread_count = 0
 stop = False
+
 
 def get_color():
     """ Returns a different color when called """
@@ -77,22 +80,22 @@ def get_color():
     current_color_index += 1
     return color
 
-def maze_can_move(lock, maze, row, col):
-    with lock:
-        return maze.can_move_here(row, col)
 
 def solve_path(maze, start, color, path_found, lock):
-    """Find a path to the next dead end.
+    """ Find a path to the next dead end.
     When a fork is reached, spawn a new thread for every path except 1,
     and go down the remaining path.
     Push all created threads to threads.
     When a dead end is reached or path_found is True, die.
-    When the end is reached, set path_found to True."""
-    threads = []
+    When the end is reached, set path_found to True.
+    """
+    global thread_count
+    with lock:
+        thread_count += 1
+
     (row, col) = start
     while True:
-        if path_found[0] or not maze_can_move(lock, maze, row, col):
-            [thread.join() for thread in threads]
+        if path_found[0] or not maze.can_move_here(row, col):
             return
         with lock:
             maze.move(row, col, color)
@@ -100,39 +103,37 @@ def solve_path(maze, start, color, path_found, lock):
         if len(moves) == 0:
             if maze.at_end(row, col):
                 path_found[0] = True
-            [thread.join() for thread in threads]
             return
         elif len(moves) > 1:
-            new_threads = [threading.Thread(target = solve_path, args =
-                (maze, moves[i], get_color(), path_found, lock)) for i in range(len(moves) - 1)]
-            threads.extend(new_threads)
-            [thread.start() for thread in new_threads]
+            threads = []
+            for i in range(len(moves) - 1):
+                thread = threading.Thread(target=solve_path,
+                                          args=(maze, moves[i], get_color(), path_found, lock))
+                threads.append(thread)
+                thread.start()
+
+            for thread in threads:
+                thread.join()
+
             (row, col) = moves[-1]
         else:
             (row, col) = moves[0]
 
 
-
 def solve_find_end(maze):
-    """ finds the end position using threads.  Nothing is returned """
-    # A bool copies its value to the next thread, but a list carries its values to all threads.
+    """ Finds the end position using threads. Nothing is returned """
     path_found = [False]
     start_pos = maze.get_start_pos()
     color = get_color()
     lock = threading.Lock()
-    threads = []
-    start_thread = threading.Thread(target = solve_path,
-        args = (maze, start_pos, color, path_found, lock))
-    threads.append(start_thread)
-    start_thread.start()
-    start_thread.join()
+    solve_path(maze, start_pos, color, path_found, lock)
+
 
 def find_end(log, filename, delay):
     """ Do not change this function """
 
     global thread_count
 
-    # create a Screen Object that will contain all of the drawing commands
     screen = Screen(SCREEN_SIZE, SCREEN_SIZE)
     screen.background((255, 255, 0))
 
@@ -146,7 +147,7 @@ def find_end(log, filename, delay):
     done = False
     speed = 1
     while not done:
-        if screen.play_commands(speed): 
+        if screen.play_commands(speed):
             key = cv2.waitKey(0)
             if key == ord('+'):
                 speed = max(0, speed - 1)
@@ -156,7 +157,6 @@ def find_end(log, filename, delay):
                 done = True
         else:
             done = True
-
 
 
 def find_ends(log):
@@ -187,7 +187,6 @@ def main():
     sys.setrecursionlimit(5000)
     log = Log(show_terminal=True)
     find_ends(log)
-
 
 
 if __name__ == "__main__":
