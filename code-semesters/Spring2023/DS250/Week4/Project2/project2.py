@@ -2,7 +2,6 @@
 import pandas as pd
 import altair as alt
 import numpy as np
-from scipy import stats
 
 # ALL VARIABLES USED: airport_code	character	Airport Code
 """
@@ -23,6 +22,20 @@ minutes_delayed_security	integer	Minutes Delayed Security
 minutes_delayed_weather	integer	Minutes Delayed Weather
 minutes_delayed_total	integer	Minutes Delayed Total
 """
+
+"""Questions and Tasks
+Which airport has the worst delays? Discuss the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours.
+
+What is the best month to fly if you want to avoid delays of any length? Discuss the metric you chose and why you chose it to calculate your answer. Include one chart to help support your answer, with the x-axis ordered by month. (To answer this question, you will need to remove any rows that are missing the Month variable.)
+
+According to the BTS website, the “Weather” category only accounts for severe weather delays. Mild weather delays are not counted in the “Weather” category, but are actually included in both the “NAS” and “Late-Arriving Aircraft” categories. Your job is to create a new column that calculates the total number of flights delayed by weather (both severe and mild). You will need to replace all the missing values in the Late Aircraft variable with the mean. Show your work by printing the first 5 rows of data in a table. Use these three rules for your calculations:__
+
+100% of delayed flights in the Weather category are due to weather
+30% of all delayed flights in the Late-Arriving category are due to weather.
+From April to August, 40% of delayed flights in the NAS category are due to weather. The rest of the months, the proportion rises to 65%.
+Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Discuss what you learn from this graph.
+
+Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”). In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the “NaN” for at least one missing value.__"""
 #%%
 missing_flights = pd.read_json("flights_missing.json")
 
@@ -35,6 +48,10 @@ worst_airport = missing_flights.loc[missing_flights['hours_delayed_total'].idxma
 chart1 = missing_flights.groupby('airport_code').sum().filter(items=['num_of_flights_total', 'number_of_delays_total', 'proportion_delayed', 'hours_delayed_total'])
 #%%
 chart1
+
+
+
+
 #%%
 remove_month = missing_flights[missing_flights["month"] != "n/a"]
 # This removes any n/a in the "month" column
@@ -48,7 +65,13 @@ remove_month['month'] = pd.Categorical(remove_month['month'], categories=month_o
 chart2 = remove_month.groupby(by='month').sum().filter(items=['num_of_flights_total', 'num_of_delays_total', 'proportion_delayed'])
 #%%
 chart2
+
+
+
+
+
 # %%
+
 # Step 1: Replace missing values in the "num_of_delays_late_aircraft" column with the mean
 mean_late_aircraft = missing_flights['num_of_delays_late_aircraft'].mean()
 missing_flights['num_of_delays_late_aircraft'].fillna(mean_late_aircraft, inplace=True)
@@ -63,83 +86,40 @@ missing_flights.loc[missing_flights['num_of_delays_weather'].notnull(), 'num_of_
 # Rule 2: 30% of all delayed flights in the Late-Arriving category are due to weather
 missing_flights['num_of_delays_weather_total'] += 0.3 * missing_flights['num_of_delays_late_aircraft']
 
-# Rule 3: From April to August, 40% of delayed flights in the NAS category are due to weather. The rest of the months, the proportion rises to 65%.
-missing_flights.loc[missing_flights['month'].isin(['April', 'May', 'June', 'July', 'August']), 'num_of_delays_weather_total'] += 0.4 * missing_flights['num_of_delays_nas']
-missing_flights.loc[~missing_flights['month'].isin(['April', 'May', 'June', 'July', 'August']), 'num_of_delays_weather_total'] += 0.65 * missing_flights['num_of_delays_nas']
+chart3 = missing_flights.num_of_delays_weather_total.head()
+# %%
+chart3
 
-# Print the first 5 rows of the updated table
-print(missing_flights.head(5))
-# replace all the missing values in the Late Aircraft variable with the mean of the column
 
-#%%
-# create a new column that calculates the total number of weather delays for each airport
-missing_flights['total_weather_delays'] = missing_flights['weather_ct'] + missing_flights['nas_ct'] + missing_flights['late_aircraft_ct']
 
-# Group the data by airport code and calculate the proportion of flights delayed by weather
-weather_proportions = missing_flights.groupby('airport_code')['num_of_delays_weather_total'].sum() / missing_flights.groupby('airport_code')['num_of_flights_total'].sum()
-weather_proportions = weather_proportions.reset_index()
 
-# Create the bar plot using Altair
-bar_plot = alt.Chart(weather_proportions).mark_bar().encode(
+# %%
+# Create a new DataFrame with the weather variable
+weather_df = missing_flights[['airport_code', 'num_of_delays_weather_total', 'num_of_flights_total']]
+
+# Calculate the proportion of flights delayed by weather
+weather_df['proportion_delayed_by_weather'] = weather_df['num_of_delays_weather_total'] / weather_df['num_of_flights_total']
+
+# Create a barplot of the proportion of flights delayed by weather
+barplot = alt.Chart(weather_df).mark_bar().encode(
     x='airport_code',
-    y='num_of_delays_weather_total',
-    tooltip=['airport_code', 'num_of_delays_weather_total']
+    y='proportion_delayed_by_weather',
+    tooltip=['airport_code', 'proportion_delayed_by_weather']
 ).properties(
     title='Proportion of Flights Delayed by Weather at Each Airport',
     width=600,
     height=400
 )
 
-# Show the bar plot
-bar_plot.show()
-
-#%%
-chart4 = missing_flights.weather_proporions.groupby('airport_code')
-
-source = chart4({
-    'a': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
-    'b': [28, 55, 43, 91, 81, 53, 19, 87, 52]
-})
-
-alt.Chart(source).mark_bar().encode(
-    x='a',
-    y='b'
-)
-
-#%%
-missing_flights = pd.read_json("flights_missing.json").fillna(np.nan)
-missing_flights.replace('n/a', np.nan, inplace=True)
-missing_flights.replace('na', np.nan, inplace=True)
-missing_flights.replace('N/A', np.nan, inplace=True)
-missing_flights.replace('NA', np.nan, inplace=True)
-missing_flights.replace('missing', np.nan, inplace=True)
+# Show the barplot
+barplot.show()
 
 
 
-
-# Creates a new column that calculates the total number of weather delays
-# for each airport
-
-# missing_flights['total_weather_delays'] = missing_flights['weather_ct'] + missing_flights['nas_ct'] + missing_flights['late_aircraft_ct']
-
-# missing_flights['late_aircraft_ct'] = missing_flights['late_aircraft_ct'].fillna(missing_flights['late_aircraft_ct'].mean())
-
-# # Step 2: Calculate the total number of weather delays based on the specified rules
-# is_severe_weather = missing_flights['weather_ct']
-# is_late_arriving_weather = missing_flights['late_aircraft_ct'] * 0.3
-# is_nas_weather = np.where(remove_month['month'].isin(['April', 'May', 'June', 'July', 'August']),
-#                           missing_flights['nas_ct'] * 0.4,
-#                           missing_flights['nas_ct'] * 0.65)
-
-# missing_flights['total_weather_delays'] = is_severe_weather + is_late_arriving_weather + is_nas_weather
-
-# # Print the first 5 rows of data with the new column
-# print(missing_flights.head(5))
-# # %%
-# tot_num_of_weather_delays = missing_flights['carrier_ct'] + missing_flights['weather_ct'] + missing_flights['nas_ct'] + missing_flights['security_ct'] + missing_flights['late_aircraft_ct']
-# chart4 = missing_flights.tot_num_of_weather_delays.groupby('airport_code') 
 
 # %%
 
-missing_flights
+missing_flights.replace('n/a', np.nan, inplace=True)
+missing_flights.head()
+
 # %%

@@ -27,7 +27,8 @@ I have 8 logical processors on my computer so I reasoned that I would need to di
 to where each logical processor would be more efficient depending on the task's complexity.
 I decided to give 3 logical processors to the prime task, 1 to the word task, 1 to the upper task, 1 to the sum task,
 and 2 to the name task. I decided to give the prime task 3 logical processors because it is the most complex task
-and I wanted to give it the most resources to complete the task.
+and I wanted to give it the most resources to complete the task. I determined that the prime task was the most complex
+because it used much more computaional power than the other tasks.
 I was able to achieve the best results with this combination of processors.
 """
 

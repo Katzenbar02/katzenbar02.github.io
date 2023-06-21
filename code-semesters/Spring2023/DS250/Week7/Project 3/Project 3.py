@@ -45,7 +45,7 @@ print("Batting average for addybo01 in 1871:", batting_average)
 
 
 # %%
-qr = dw.query('byuidss/cse-250-baseball-database', 'SELECT * FROM batting LIMIT 2')
+qr = dw.query('sqlite_file', 'SELECT * FROM batting LIMIT 2')
 results = qr.dataframe
 print(results)
 
@@ -67,4 +67,21 @@ results = pd.read_sql_query(
 print(results)
 
 
+# %%
+baseball_byuIdaho = dw.query(sqlite_file,
+    '''
+    SELECT DISTINCT CollegePlaying.playerID,
+        CollegePlaying.schoolID,
+        Salaries.salary,
+        Salaries.yearID,
+        Salaries.teamID
+    FROM CollegePlaying
+        JOIN Salaries 
+            ON CollegePlaying.playerID = Salaries.playerID
+    WHERE CollegePlaying.schoolID = "idbyuid"
+    ORDER BY Salaries.salary DESC
+    '''
+).dataframe
+
+print(baseball_byuIdaho.to_markdown())
 # %%
