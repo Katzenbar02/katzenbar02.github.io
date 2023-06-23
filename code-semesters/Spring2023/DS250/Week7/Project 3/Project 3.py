@@ -1,87 +1,92 @@
 #%%
-import pandas as pd 
-import altair as alt
-import numpy as np
 import sqlite3
-#%%
-import datadotworld as dw
+import pandas as pd
+import altair as alt
 
-# %%
-# careful to list your path to the file.
-sqlite_file = 'lahmansbaseballdb.sqlite'
-con = sqlite3.connect(sqlite_file)
+#%% Connect to the SQLite database
+con = sqlite3.connect('lahmansbaseballdb.sqlite')
 
-results = pd.read_sql_query( 
-    'SELECT * FROM allstarfull LIMIT 5',
-    con)
+#%% GRAND QUESTION 1
+query_grand_q1 = """
+SELECT DISTINCT salaries.playerID, collegeplaying.schoolID, salaries.salary, salaries.yearID, salaries.teamID
+FROM salaries
+    JOIN collegeplaying ON salaries.playerID = collegeplaying.playerID
+WHERE collegeplaying.schoolID = 'idbyuid'
+ORDER BY salaries.salary DESC
+"""
 
-results
+df_grand_q1 = pd.read_sql_query(query_grand_q1, con)
 
-#%%
-table = pd.read_sql_query(
-    "SELECT * FROM sqlite_master WHERE type='table'",
-    con)
-print(table.filter(['name']))
-print('\n\n')
-# 8 is collegeplaying
-print(table.sql[8])
-
-#%%
-
-# Execute the SQL query
-batting_query = "SELECT * FROM batting LIMIT 2"
-batting_results = pd.read_sql_query(batting_query, con)
-print(batting_results)
+print(df_grand_q1.to_markdown())
 
 
-#%%
-query = "SELECT playerID, yearID, AB, H, ((H * 1.0) / AB) AS batting_average FROM batting WHERE playerID = 'addybo01' AND yearID = 1871"
-results = pd.read_sql_query(query, con)
+# GRAND QUESTION 2
 
-# Retrieve the batting average
-batting_average = results['batting_average'].values[0]
-print("Batting average for addybo01 in 1871:", batting_average)
+#%% PART A: Calculate the batting average for each player in 2016 with at least 1 at-bat
+query_grand_q2_part_a = '''
+SELECT playerID, yearID, CAST(H AS FLOAT) / AB AS batting_average
+FROM batting
+WHERE yearID = 2019 AND AB >= 1
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5
+'''
 
+df_grand_q2_part_a = pd.read_sql_query(query_grand_q2_part_a, con)
 
-
-# %%
-qr = dw.query('sqlite_file', 'SELECT * FROM batting LIMIT 2')
-results = qr.dataframe
-print(results)
-
-#%%
-results = pd.read_sql_query(
-    'SELECT s.playerID, c.schoolID, s.salary, s.yearID, s.teamID FROM collegeplaying AS c JOIN salaries AS s ON c.playerID = s.playerID JOIN people AS p ON p.playerID = c.playerID WHERE c.schoolID="BYU-Idaho" ORDER BY s.salary DESC',
-    con)
-
-results
-
-# %%
-results = pd.read_sql_query(
-    "SELECT b.playerID, b.schoolID, s.salary, s.yearID, s.teamID \
-    FROM collegeplaying AS b \
-    INNER JOIN salaries AS s ON b.playerID = s.playerID \
-    WHERE b.schoolID = 'BYU-Idaho'",
-    con)
-
-print(results)
+print(df_grand_q2_part_a.to_markdown())
 
 
-# %%
-baseball_byuIdaho = dw.query(sqlite_file,
-    '''
-    SELECT DISTINCT CollegePlaying.playerID,
-        CollegePlaying.schoolID,
-        Salaries.salary,
-        Salaries.yearID,
-        Salaries.teamID
-    FROM CollegePlaying
-        JOIN Salaries 
-            ON CollegePlaying.playerID = Salaries.playerID
-    WHERE CollegePlaying.schoolID = "idbyuid"
-    ORDER BY Salaries.salary DESC
-    '''
-).dataframe
+#%% PART B: Calculate the batting average for each player in 2016 with at least 10 at-bats
+query_grand_q2_part_b = '''
+SELECT playerID, yearID, CAST(H AS FLOAT) / AB AS batting_average
+FROM batting
+WHERE yearID = 2019 AND AB >= 10
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5
+'''
 
-print(baseball_byuIdaho.to_markdown())
+df_grand_q2_part_b = pd.read_sql_query(query_grand_q2_part_b, con)
+
+print(df_grand_q2_part_b.to_markdown())
+
+
+#%% PART C: Calculate the career batting average for players with at least 100 at-bats
+query_grand_q2_part_c = '''
+SELECT playerID, AVG(CAST(H AS FLOAT) / AB) AS career_batting_average
+FROM batting
+GROUP BY playerID
+HAVING SUM(AB) >= 100
+ORDER BY career_batting_average DESC
+LIMIT 5
+'''
+
+df_grand_q2_part_c = pd.read_sql_query(query_grand_q2_part_c, con)
+
+print(df_grand_q2_part_c.to_markdown())
+
+
+#%% GRAND QUESTION 3
+# SQL query to compare two baseball teams based on average salary
+query_grand_q3 = '''
+SELECT teamID, AVG(salary) AS avg_salary
+FROM salaries
+WHERE teamID IN ('NYA', 'TEX')
+GROUP BY teamID
+'''
+
+df_grand_q3 = pd.read_sql_query(query_grand_q3, con)
+
+print(df_grand_q3.to_markdown())
+
+# Create an Altair bar chart to visualize the comparison
+chart = alt.Chart(df_grand_q3).mark_bar().properties(
+    title='Average Salary per Player'
+).encode(
+    x=alt.X('avg_salary', axis=alt.Axis(title="Average Salary")),
+    y=alt.Y('teamID', axis=alt.Axis(title='Team'))
+)
+
+# Display the chart
+chart
+
 # %%

@@ -75,7 +75,7 @@ __What is the best month to fly if you want to avoid delays of any length?__
 
 _I found that the best month to fly without any delays is September. During September there are nearly 12 delays per flight._
 
-```python
+```{python}
 #| label: GQ2
 remove_month = missing_flights[missing_flights["month"] != "n/a"]
 # This removes any n/a in the "month" column
@@ -98,7 +98,7 @@ __Create a new column that calculates the total number of flights delayed by wea
 
 _The table created shows the number of delays calcualted in total at each airport._
 
-```python
+```{python}
 #| label: GQ3
 # Step 1: Replace missing values in the "num_of_delays_late_aircraft" column with the mean
 mean_late_aircraft = missing_flights['num_of_delays_late_aircraft'].mean()
@@ -126,7 +126,7 @@ __Create a barplot showing the proportion of all flights that are delayed by wea
 
 _The barplot shows the proportion of delays caused by the weather at each airport. It appears Salt Lake City airport has the highest proportion of delays caused by weather compared to other airports._
 
-```python
+```{python}
 #| label: GQ4
 weather_df = missing_flights[['airport_code', 'num_of_delays_weather_total', 'num_of_flights_total']]
 
@@ -145,7 +145,7 @@ barplot = alt.Chart(weather_df).mark_bar().encode(
 )
 
 # Show the barplot
-barplot.show()
+barplot
 
 
 ```
@@ -156,7 +156,7 @@ __Fix all of the varied missing data types in the data to be consistent (all mis
 
 _At index 921, the data in month column is replaced with "NaN"_
 
-```python
+```{python}
 #| label: GQ5
 #| 
 missing_flights.replace('n/a', np.nan, inplace=True)
@@ -251,7 +251,7 @@ barplot = alt.Chart(weather_df).mark_bar().encode(
 )
 
 # Show the barplot
-barplot.show()
+barplot
 
 
 

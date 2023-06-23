@@ -1,0 +1,289 @@
+---
+title: "Client Report - [Project 3: Finding relationships in baseball]"
+subtitle: "Course DS 250"
+author: "[Joshua Ludwig]"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+    
+---
+
+```{python}
+#| label: libraries
+#| include: false
+import sqlite3
+import pandas as pd
+import altair as alt
+
+from IPython.display import Markdown
+from IPython.display import display
+from tabulate import tabulate
+```
+
+
+## Elevator pitch
+
+_I used SQLite3, Pandas, and Altair to write SQL queries and create new dataframes using baseball statistics. By understanding the data within each table, I was able to utilize them to generate new queries and combine multiple columns from different tables. With this knowledge, I can create charts and graphs to visualize the data concisely and readably._
+
+```{python}
+#| include: false
+con = sqlite3.connect('lahmansbaseballdb.sqlite')
+```
+
+__Highlight the grand questions__
+
+## GRAND QUESTION 1
+
+__Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho__
+
+_I created a query that retrieves information about baseball players who attended BYU-Idaho, including their salaries for each year they were on a team. The results are sorted by the players' salaries, from highest paid to lowest paid._
+
+```{python}
+#| label: GQ1
+#| code-summary: Grand Question 1 Code
+#| tbl-cap: "Baseball players' salaries who attended BYU-Idaho"
+#| tbl-cap-location: top
+query_grand_q1 = """
+SELECT DISTINCT salaries.playerID, collegeplaying.schoolID, salaries.salary, salaries.yearID, salaries.teamID
+FROM salaries
+    JOIN collegeplaying ON salaries.playerID = collegeplaying.playerID
+WHERE collegeplaying.schoolID = 'idbyuid'
+ORDER BY salaries.salary DESC
+"""
+
+df_grand_q1 = pd.read_sql_query(query_grand_q1, con)
+
+display(df_grand_q1)
+```
+
+
+
+## GRAND QUESTION 2
+
+__Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year.__
+
+_I created three queries to calculate the batting average of players in 2019. The tables show the batting averages for players who had at least one at-bat, at least ten at-bats, and their career averages._
+
+### PART A:
+
+__Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year__
+
+
+```{python}
+#| label: GQ2 PART A
+#| code-summary: Part A Code
+#| tbl-cap: "Batting average for players with at least 1 at bat"
+#| tbl-cap-location: top
+query_grand_q2_part_a = '''
+SELECT playerID, yearID, CAST(H AS FLOAT) / AB AS batting_average
+FROM batting
+WHERE yearID = 2019 AND AB >= 1
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5
+'''
+
+df_grand_q2_part_a = pd.read_sql_query(query_grand_q2_part_a, con)
+
+display(df_grand_q2_part_a)
+```
+
+### PART B:
+
+__Use the same query as above, but only include players with at least 10 at bats that year__
+
+```{python}
+#| label: GQ2 PART B
+#| code-summary: Part B Code
+#| tbl-cap: "Batting average for players with at least 10 at bats"
+#| tbl-cap-location: top
+query_grand_q2_part_b = '''
+SELECT playerID, yearID, CAST(H AS FLOAT) / AB AS batting_average
+FROM batting
+WHERE yearID = 2019 AND AB >= 10
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5
+'''
+
+df_grand_q2_part_b = pd.read_sql_query(query_grand_q2_part_b, con)
+
+display(df_grand_q2_part_b)
+```
+
+### PART C:
+
+__Now calculate the batting average for players over their entire careers (all years combined)__
+
+
+```{python}
+#| label: GQ2 PART C
+#| code-summary: Part C Code
+#| tbl-cap: "Batting average for players over their entire careers"
+#| tbl-cap-location: top
+query_grand_q2_part_c = '''
+SELECT playerID, AVG(CAST(H AS FLOAT) / AB) AS career_batting_average
+FROM batting
+GROUP BY playerID
+HAVING SUM(AB) >= 100
+ORDER BY career_batting_average DESC
+LIMIT 5
+'''
+
+df_grand_q2_part_c = pd.read_sql_query(query_grand_q2_part_c, con)
+
+display(df_grand_q2_part_c)
+
+```
+
+
+## GRAND QUESTION 3
+
+__Write an SQL query to get the data you need, then make a graph in Altair to visualize the comparison.__
+
+_I compared two baseball teams, the New York Yankees and the Texas Rangers, by writing an SQL query to retrieve the necessary data. The visualization clearly shows that the New York Yankees have a higher average salary per player compared to the Texas Rangers. The New York Yankees average nearly 4 million dollars per player, while the Texas Rangers average around 2.1 million dollars per player._
+
+```{python}
+#| label: GQ3
+#| code-summary: Grand Question 3 Code
+#| tbl-cap: "Average salary per player on the New York Yankees and Texas Rangers"
+#| tbl-cap-location: top
+query_grand_q3 = '''
+SELECT teamID, AVG(salary) AS avg_salary
+FROM salaries
+WHERE teamID IN ('NYA', 'TEX')
+GROUP BY teamID
+'''
+
+df_grand_q3 = pd.read_sql_query(query_grand_q3, con)
+
+display(df_grand_q3)
+
+# Create an Altair bar chart to visualize the comparison
+chart = alt.Chart(df_grand_q3).mark_bar().properties(
+    width=600,
+    height=200,
+    title='Average Salary per Player'
+).encode(
+    x=alt.X('avg_salary', axis=alt.Axis(title="Average Salary")),
+    y=alt.Y('teamID', axis=alt.Axis(title='Team'))
+)
+
+# Display the chart
+chart
+
+```
+
+
+
+
+## APPENDIX A (Complete Python Code)
+
+```python
+#%%
+import sqlite3
+import pandas as pd
+import altair as alt
+
+#%% Connect to the SQLite database
+con = sqlite3.connect('lahmansbaseballdb.sqlite')
+
+#%% GRAND QUESTION 1
+query_grand_q1 = """
+SELECT DISTINCT salaries.playerID, collegeplaying.schoolID, salaries.salary, salaries.yearID, salaries.teamID
+FROM salaries
+    JOIN collegeplaying ON salaries.playerID = collegeplaying.playerID
+WHERE collegeplaying.schoolID = 'idbyuid'
+ORDER BY salaries.salary DESC
+"""
+
+df_grand_q1 = pd.read_sql_query(query_grand_q1, con)
+
+print(df_grand_q1.to_markdown())
+
+
+# GRAND QUESTION 2
+
+#%% PART A: Calculate the batting average for each player in 2016 with at least 1 at-bat
+query_grand_q2_part_a = '''
+SELECT playerID, yearID, CAST(H AS FLOAT) / AB AS batting_average
+FROM batting
+WHERE yearID = 2019 AND AB >= 1
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5
+'''
+
+df_grand_q2_part_a = pd.read_sql_query(query_grand_q2_part_a, con)
+
+print(df_grand_q2_part_a.to_markdown())
+
+
+#%% PART B: Calculate the batting average for each player in 2016 with at least 10 at-bats
+query_grand_q2_part_b = '''
+SELECT playerID, yearID, CAST(H AS FLOAT) / AB AS batting_average
+FROM batting
+WHERE yearID = 2019 AND AB >= 10
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5
+'''
+
+df_grand_q2_part_b = pd.read_sql_query(query_grand_q2_part_b, con)
+
+print(df_grand_q2_part_b.to_markdown())
+
+
+#%% PART C: Calculate the career batting average for players with at least 100 at-bats
+query_grand_q2_part_c = '''
+SELECT playerID, AVG(CAST(H AS FLOAT) / AB) AS career_batting_average
+FROM batting
+GROUP BY playerID
+HAVING SUM(AB) >= 100
+ORDER BY career_batting_average DESC
+LIMIT 5
+'''
+
+df_grand_q2_part_c = pd.read_sql_query(query_grand_q2_part_c, con)
+
+print(df_grand_q2_part_c.to_markdown())
+
+
+#%% GRAND QUESTION 3
+# SQL query to compare two baseball teams based on average salary
+query_grand_q3 = '''
+SELECT teamID, AVG(salary) AS avg_salary
+FROM salaries
+WHERE teamID IN ('NYA', 'TEX')
+GROUP BY teamID
+'''
+
+df_grand_q3 = pd.read_sql_query(query_grand_q3, con)
+
+print(df_grand_q3.to_markdown())
+
+# Create an Altair bar chart to visualize the comparison
+chart = alt.Chart(df_grand_q3).mark_bar().properties(
+    title='Average Salary per Player'
+).encode(
+    x=alt.X('avg_salary', axis=alt.Axis(title="Average Salary")),
+    y=alt.Y('teamID', axis=alt.Axis(title='Team'))
+)
+
+# Display the chart
+chart
+
+# %%
+
+```

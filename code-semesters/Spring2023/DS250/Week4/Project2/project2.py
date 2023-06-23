@@ -112,7 +112,7 @@ barplot = alt.Chart(weather_df).mark_bar().encode(
 )
 
 # Show the barplot
-barplot.show()
+barplot
 
 
 
