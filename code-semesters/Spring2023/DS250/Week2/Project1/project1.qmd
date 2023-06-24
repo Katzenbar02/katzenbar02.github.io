@@ -1,0 +1,285 @@
+---
+title: "Client Report - [Project 1: What's in a name?]"
+subtitle: "Course DS 250"
+author: "[Joshua Ludwig]"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+    
+---
+
+```{python}
+#| label: libraries
+#| include: false
+import pandas as pd
+import altair as alt
+import numpy as np
+
+from IPython.display import Markdown
+from IPython.display import display
+from tabulate import tabulate
+```
+
+
+## Elevator pitch
+
+_An analysis of commom and not so common names used over time in the United States. This is uncludes my personal name, Brittany, Biblical names, and the name Anakin from the Star Wars prequel movies. This gives data, graphs, and tables showing the popularity of these names over time and how they have declined and grown over time._
+
+```{python}
+#| label: project data
+#| code-summary: Read and format project data
+#| include: false
+names = pd.read_csv("names_year.csv")
+```
+
+## GRAND QUESTION 1
+
+__How does your name at your birth year compare to its use historically?__
+
+_The name Joshua hit a peak around the year 1990 with around 33,000 babies born with thre name in the U.S.; however, when I was born in 2002, the name was in decline but still with a good amount of babies born with that name. The year I was born there was about 23,000 babies born with the name Joshua._
+
+```{python}
+#| label: GQ1
+#| code-summary: Grand Question 1 code
+Joshua = names.query("name == 'Joshua'")[["name", "year", 'Total']]
+
+joshuaChart = alt.Chart(Joshua, title="Joshua Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1950, 2015))),
+    alt.Y("Total", title="Total")
+).properties(width=400, height=300)
+
+joshuaChart
+
+```
+
+
+```{python}
+#| label: GQ1 table
+#| code-summary: table example
+#| tbl-cap: "Joshua Popularity"
+#| tbl-cap-location: top
+table = Joshua.head(83)
+display(table)
+
+```
+
+
+## GRAND QUESTION 2
+
+__If you talked to someone named Brittany on the phone, what is your guess of their age? What ages would you not guess?__
+
+_From the chart, I would guess that someone named Brittany would have been born in around the 1990s therefore their age would be about 30. I would not guess there age is more than 37 or less than 22._
+
+```{python}
+#| label: GQ2
+#| code-summary: Grand Question 2 code
+
+Brittany = names.query("name == 'Brittany'")[["name", "year", 'Total']]
+
+brittanyChart = alt.Chart(Brittany, title="Brittany Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1975, 2015))),
+    alt.Y("Total", title="Total")
+).properties(width=400, height=300)
+
+brittanyChart
+```
+
+```{python}
+#| label: GQ2 table
+#| code-summary: table example
+#| tbl-cap: "Brittany Popularity"
+#| tbl-cap-location: top
+table = Brittany.head(31)
+
+display(table)
+```
+
+
+## GRAND QUESTION 3
+
+__Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names.__
+
+_These Bible names were most popular from around the 1920s to the 1920s where there was a massive drg in these Bible names. The name Mary was most popular out of the four with the names hitting a peak in the 1950s. Martha and Paul were easily the least popular names out of the four._
+
+```{python}
+#| label: GQ3
+#| code-summary: Grand Question 3 code
+Bible =  names.query('name in ["Mary", "Martha", "Peter", "Paul"]')[["name", "year", 'Total']]
+
+bibleChart = alt.Chart(Bible, title="Bible Name Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1920, 2000))),
+    alt.Y("Total", title="Total"),
+    color = 'name')
+
+bibleChart
+```
+
+```{python}
+#| label: GQ3 table
+#| code-summary: table example
+#| tbl-cap: "Bible Name Popularity"
+#| tbl-cap-location: top
+table = Bible.head(42)
+
+display(table)
+```
+
+## GRAND QUESTION 4
+
+__Think of a unique name from a famous movie. Plot that name and see how increases line up with the movie release.__
+
+_The name Anakin from the Star Wars prequel movies was the name of the main character --Anakin Skywalker. This was not a name before Star Wars: The Phantom Menace therefore it did not exist until 1998 --one year before the release of the movie. The name hit a local peak in 2005 when the last prequel Star Wars movie released. Afterwards the name declined in use, until around 2011 when it started gaining popularity when it hit its peak in 2015._
+
+```{python}
+#| label: GQ4
+#| code-summary: Grand Question 4 code
+Anakin = names.query("name == 'Anakin'")[["name", "year", 'Total']]
+
+anakinChart = alt.Chart(Anakin, title="Anakin Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1998, 2015))),
+    alt.Y("Total", title="Total")
+).properties(width=400, height=300)
+
+anakinChart
+```
+
+```{python}
+#| label: GQ4 table
+#| code-summary: table example
+#| tbl-cap: "Anakin Popularity"
+#| tbl-cap-location: top
+table = Anakin.head(42)
+
+display(table)
+```
+
+
+## APPENDIX A (Additional Python Code)
+
+```python
+#%%
+import pandas as pd
+import altair as alt
+import numpy as np
+
+
+#%%
+names = pd.read_csv("names_year.csv")
+
+
+
+
+# GRAND QUESTION 1
+# %% Joshua query
+Joshua = names.query("name == 'Joshua'")[["name", "year", 'Total']]
+print(Joshua)
+
+#%% Joshua Names
+
+joshuaChart = alt.Chart(Joshua, title="Joshua Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1970, 2015))),
+    alt.Y("Total", title="Total")
+).properties(width=400, height=300)
+
+joshuaChart
+
+# %% Save Joshua Chart
+
+joshuaChart.save("joshua_chart.png")
+
+#%% Joshua Table code
+table = Joshua.head(83)
+print(table.to_markdown())
+
+
+
+
+
+# GRAND QUESTION 2
+# %% Create Brittany query
+
+Brittany = names.query("name == 'Brittany'")[["name", "year", 'Total']]
+print(Brittany)
+
+#%% Brittany Names
+
+brittanyChart = alt.Chart(Brittany, title="Brittany Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1975, 2015))),
+    alt.Y("Total", title="Total")
+).properties(width=400, height=300)
+
+brittanyChart
+# %% Save Brittany Chart
+
+brittanyChart.save("brittany_chart.png")
+
+#%% Brittany Table code
+table = Brittany.head(31)
+print(table.to_markdown())
+
+
+
+
+# GRAND QUESTION 3
+# %% Create Mary, Martha, Peter, and Paul From 1920 - 2000
+# allBilble = ["Mary", "Martha", "Peter", "Paul"]
+Bible =  names.query('name in ["Mary", "Martha", "Peter", "Paul"]')[["name", "year", 'Total']]
+print(Bible)
+#%% Bible Names
+
+bibleChart = alt.Chart(Bible, title="Bible Name Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1920, 2000))),
+    alt.Y("Total", title="Total"),
+    color = 'name')
+    
+    # .transform_filter(
+    # alt.FieldOneOfPredicate(field='name', oneOf=['Mary', 'Martha', 'Peter'])
+
+
+bibleChart
+#%% Save bible Chart
+
+bibleChart.save("bible_chart.png")
+
+#%% Bible Table code
+table = Bible.head(42)
+print(table.to_markdown())
+
+
+
+# GRAND QUESTION 4
+# %%# Anakin query
+Anakin = names.query("name == 'Anakin'")[["name", "year", 'Total']]
+print(Anakin)
+
+#%% Anakin Names
+
+anakinChart = alt.Chart(Anakin, title="Anakin Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1998, 2015))),
+    alt.Y("Total", title="Total")
+).properties(width=400, height=300)
+
+anakinChart
+# %% Save Harry Chart
+
+anakinChart.save("anakin_chart.png")
+
+#%% Anakin Table code
+table = Anakin.head(42)
+print(table.to_markdown())
+```
