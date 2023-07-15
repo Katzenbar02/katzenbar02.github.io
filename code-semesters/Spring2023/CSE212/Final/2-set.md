@@ -94,7 +94,7 @@ result = find_anagrams(word_list)
 print(result)
 ```
 
-## Problem to solve
+## Problem to solve : Anagrams
 
 Problem: Write a function to determine if two strings are anagrams of each other.
 
