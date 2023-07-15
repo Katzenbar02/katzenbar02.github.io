@@ -71,7 +71,9 @@ print(result)
 
 ## Example : Duplicate Removal
 Sets are useful for filtering and deduplication. For example, if you have a list of numbers and you want to remove all duplicates, you can convert the list to a set and then back to a list.
+
 ![duplicate_remove](pics/anagram.jpg)
+
 In the following example, we will remove all duplicates from a list of numbers.
 
 ```python

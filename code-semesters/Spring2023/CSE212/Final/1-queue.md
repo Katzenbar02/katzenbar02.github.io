@@ -2,11 +2,13 @@
 A queue is a data structure that follows the "first-in, first-out" (FIFO) principle. It is an ordered collection of elements where new elements are added to the rear (end) of the queue and removal of elements occurs from the front (beginning) of the queue.
 
 Here are some things that can be done because of queue:
+
 1. Task scheduling and job processing
 2. Implementing multi-threaded or multi-process communication
 3. Implementing breadth-first search (BFS) or graph traversal algorithms
 4. Implementing concurrent processing or parallel computing
 5. Implementing caching and buffering mechanisms
+
 ## Queue operations
 These operations form the basic interface for working with queues.
 
@@ -45,6 +47,8 @@ print(queue_size)  # Output: The size of the queue
 is_empty = my_queue.empty()  # Check if the queue is empty
 print(is_empty)  # Output: True if the queue is empty, False otherwise
 ```
+![queue](pics/queue.jpg)
+
 
 ## Multithreading
 A queue can be used in conjunction with multithreading to facilitate efficient communication and coordination between multiple threads.

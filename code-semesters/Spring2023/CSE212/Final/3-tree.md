@@ -42,8 +42,10 @@ root.right = files
 
 # Performing a traversal of the file system hierarchy
 traverse_filesystem(root)
-
 ```
+
+![root](pics/root.jpg)
+
 
 ## Example : Decision
 A decision tree is a tree-like structure that is used to make decisions based on a series of questions.  It is commonly used in machine learning to classify data based on a series of questions.  For example, a decision tree can be used to classify a car as fuel-efficient or not based on a series of questions about the car.
@@ -79,8 +81,6 @@ root.right.right = Node("Buy the petrol car.")
 decision = make_decision(root)
 print("Decision:", decision)
 ```
-
-![root](pics/root.jpg)
 
 ## Problem to Solve : Risk Assessment
 
