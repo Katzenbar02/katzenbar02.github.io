@@ -268,4 +268,3 @@ class Tree:
 
         _recurive_gen(family_id, 0)
         return max_gen + 1
-

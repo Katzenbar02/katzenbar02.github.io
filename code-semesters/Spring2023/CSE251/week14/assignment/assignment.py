@@ -68,7 +68,8 @@ def main():
 
     # load runs.txt
     # part number, number of generations
-    with open('runs.txt') as runs:
+    file = "C:\\Users\\abbyj\\Downloads\\Josh's Git\\katzenbar02.github.io\\code-semesters\\Spring2023\\CSE251\\week14\\assignment\\runs.txt"
+    with open(file, 'r') as runs:
         for line in runs:
             parts = line.split(',')
             part_to_run = int(parts[0])
@@ -84,4 +85,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
