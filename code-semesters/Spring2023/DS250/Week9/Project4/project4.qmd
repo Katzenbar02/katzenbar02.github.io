@@ -1,7 +1,7 @@
 ---
-title: "Client Report - [Insert Project Title]"
+title: "Client Report - [Project 4: Can you predict that?]"
 subtitle: "Course DS 250"
-author: "[STUDENT NAME]"
+author: "[Joshua Ludwig]"
 format:
   html:
     self-contained: true
@@ -27,8 +27,10 @@ format:
 #| label: libraries
 #| include: false
 import pandas as pd
-import altair as alt
 import numpy as np
+import altair as alt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
 from IPython.display import Markdown
 from IPython.display import display
@@ -38,7 +40,8 @@ from tabulate import tabulate
 
 ## Elevator pitch
 
-_paste your elevator pitch here_
+_
+I utilized the Scikit-Learn Machine Learning libraries to develop classifier algorithms. The focus of my experimentation was a meticulously curated dataset comprising historical information on various houses. To determine whether a house was constructed before 1980, I employed a classification model workflow. This involved segregating the data into distinct features and targets, which were subsequently divided into separate test and train arrays. After training the classifier model, I assessed its performance by making predictions. To enhance the accuracy of the algorithm, I evaluated the accuracy of the model and the importance assigned to each feature by the classifier._
 
 ```{python}
 #| label: project data
@@ -51,7 +54,7 @@ __Highlight the grand questions__
 
 ## GRAND QUESTION 1
 
-__COPY PASTE GRAND QUESTION 1 FROM THE PROJECT HERE__
+__Create 2-3 charts that evaluate potential relationships between the home variables and before1980.__
 
 _type your results and analysis here_
 
@@ -101,7 +104,7 @@ display(mydat)
 
 ## GRAND QUESTION 2
 
-__COPY PASTE GRAND QUESTION FROM THE PROJECT HERE__
+__Build a classification model labeling houses as being built “before 1980” or “during or after 1980”.__
 
 _type your results and analysis here_
 
@@ -147,7 +150,52 @@ display(mydat)
 
 ## GRAND QUESTION 3
 
-__COPY PASTE GRAND QUESTION FROM THE PROJECT HERE__
+__Justify your classification model by discussing the most important features selected by your model.__
+
+_type your results and analysis here_
+
+```{python}
+#| label: GQ3
+#| code-summary: Read and format data
+# Include and execute your code here
+
+
+```
+
+_include figures in chunks and discuss your findings in the figure._
+
+```{python}
+#| label: GQ3 chart
+#| code-summary: plot example
+#| fig-cap: "My useless chart"
+#| fig-align: center
+# Include and execute your code here
+alt.Chart(dat.head(200))\
+    .encode(x = "name", y = "AK")\
+    .mark_bar()
+```
+
+
+```{python}
+#| label: GQ3 table
+#| code-summary: table example
+#| tbl-cap: "Not much of a table"
+#| tbl-cap-location: top
+# Include and execute your code here
+mydat = dat.head(1000)\
+    .groupby('year')\
+    .sum()\
+    .reset_index()\
+    .tail(10)\
+    .filter(["year", "AK","AR"])
+
+display(mydat)
+
+```
+
+## GRAND QUESTION 4
+
+__Describe the quality of your classification model using 2-3 different evaluation metrics.__
 
 _type your results and analysis here_
 

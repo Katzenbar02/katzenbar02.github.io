@@ -21,7 +21,7 @@ Describe the quality of your classification model using 2-3 different evaluation
 You also need to explain how to interpret each of the evaluation metrics you use.
 """
 
-# %%Import data
+#%%Import data
 alt.data_transformers.disable_max_rows()
 
 dwellings_denver = 'dwellings_denver.csv'
