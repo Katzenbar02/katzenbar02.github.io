@@ -1,0 +1,100 @@
+### CSE 250 Coding Challenge
+
+__[Joshua Ludwig]__
+
+### Challenge Summary
+
+_I feel very good and successful for my work. I believe I was able to get as far as I could._
+
+```{python}
+#| label: libraries
+#| include: false
+import altair as alt
+import pandas as pd
+import numpy as np
+import matplotlib
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import metrics
+
+from IPython.display import Markdown
+from IPython.display import display
+from tabulate import tabulate
+```
+
+#### Challenge 1
+
+##### Code
+
+```{python}
+#%%
+url = "https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv" 
+names = pd.read_csv(url)
+
+#%%
+Kobe = names.query("name == 'Kobe'")[["name", "year", 'Total']]
+
+#%%
+kobeChart = alt.Chart(Kobe, title="Kobe Popularity").mark_line(clip=True).encode(
+    alt.X("year", title="Year",scale=alt.Scale(domain=(1970, 2015))),
+    alt.Y("Total", title="Total")
+).properties(width=400, height=300)
+
+
+```
+
+#### Challenge 2
+
+##### Code
+
+```{python}
+ #%% Question|Task 2: Dealing with Missing Data
+steve = pd.DataFrame({"steve": ['N/A', 15, 22, 45, 31, -999, 21, 2, 0, 0, 0, 'broken', 19, 19, 36, 27, 0, np.nan, 0, 33, 42, -999]})
+
+#%% Step 1: Replace unofficial missing values with Python-recognized missing values
+steve.replace(['N/A', 'broken', -999], np.nan, inplace=True)
+
+#%% Step 2: Replace missing values with the average excluding zeros
+non_zero_mean = steve[steve != 0].mean()
+steve.replace(0, np.nan, inplace=True)
+steve.fillna(non_zero_mean, inplace=True)
+
+#%% Step 3: Report the mean and standard deviation of the cleaned data (including the zeros)
+mean_with_zeros = steve.mean()
+std_with_zeros = steve.std()
+
+#%%
+print("Mean (including zeros):", mean_with_zeros)
+print("Standard Deviation (including zeros):", std_with_zeros)
+
+```
+
+#### Challenge 3
+
+##### Code
+
+```{python}
+steveChart = alt.Chart(steve, title="Steve's Data").mark_bar().encode(
+    alt.X("steve", bin=alt.Bin(maxbins=20), title="Steve"),
+    alt.Y("count()", title="Count of Records")
+).properties(width=400, height=300)
+
+steveChart
+
+```
+
+#### Challenge 4
+
+##### Code
+
+```{python}
+ url = "http://byuistats.github.io/CSE250-Course/data/clean_starwars.csv"
+sw_dat = pd.read_csv(url)
+
+sw_dat.gender.value_counts()
+
+#%%
+sw_dat.replace(['Yes', 'No'], [1, 0], inplace=True)
+
+```
