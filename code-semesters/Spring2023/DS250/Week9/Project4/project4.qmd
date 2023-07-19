@@ -26,11 +26,18 @@ format:
 ```{python}
 #| label: libraries
 #| include: false
+# import packages
 import pandas as pd
 import numpy as np
 import altair as alt
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+import catboost as cb
+from sklearn import metrics
+
 
 from IPython.display import Markdown
 from IPython.display import display
@@ -46,8 +53,18 @@ I utilized the Scikit-Learn Machine Learning libraries to develop classifier alg
 ```{python}
 #| label: project data
 #| code-summary: Read and format project data
-# Include and execute your code here
-dat = pd.read_csv("https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv")
+#| include: false
+
+# import data
+alt.data_transformers.disable_max_rows()
+
+dwellings_denver = 'dwellings_denver.csv'
+dwellings_ml = 'dwellings_ml.csv'
+dwellings_neighborhoods_ml = 'dwellings_neighborhoods_ml.csv'
+
+dwellings_denver = pd.read_csv(dwellings_denver)
+dwellings_ml = pd.read_csv(dwellings_ml)
+dwellings_neighborhoods_ml = pd.read_csv(dwellings_neighborhoods_ml)
 ```
 
 __Highlight the grand questions__
@@ -56,49 +73,110 @@ __Highlight the grand questions__
 
 __Create 2-3 charts that evaluate potential relationships between the home variables and before1980.__
 
-_type your results and analysis here_
+_In each of these charts, the average number of bedrooms, bathrooms, and living area in houses exhibits an upward trend after the year 1980._
 
 ```{python}
 #| label: GQ1
 #| code-summary: Read and format data
-# Include and execute your code here
+#| include: false
 
+# %%Aggregate data and create the dwellings_table
+dwellings_table = (
+    dwellings_ml.groupby('yrbuilt')
+    .agg(
+        sprice_avg=('sprice', np.average),
+        stories_avg=('stories', np.average),
+        nocars_avg=('nocars', np.average),
+        livearea_avg=('livearea', np.average),
+        numbdrm_avg=('numbdrm', np.average),
+        numbaths_avg=('numbaths', np.average)
+    )
+    .reset_index()
+)
+
+#%% Filter and select desired columns
+dwellings_table = dwellings_table[['yrbuilt', 'sprice_avg', 'stories_avg', 'nocars_avg', 'livearea_avg', 'numbdrm_avg', 'numbaths_avg']]
+
+#%% Create an overlay chart to mark 1980
+overlay = (
+    alt.Chart(dwellings_table.query("yrbuilt == 1980"))
+    .mark_rule(color='red')
+    .encode(x='yrbuilt')
+)
+
+#%% Create a function to generate the final chart with overlay
+def create_final_chart(chart, title):
+    final_chart = (alt.layer(chart, overlay)
+        .configure_title(
+            fontSize=15,
+            anchor="start",
+            subtitleFontSize=11
+        )
+    )
+    final_chart.title = title
+    return final_chart
 
 ```
-
-_include figures in chunks and discuss your findings in the figure._
+i
 
 ```{python}
 #| label: GQ1 chart
 #| code-summary: plot example
-#| fig-cap: "My useless chart"
 #| fig-align: center
+#| include: false
+
 # Include and execute your code here
-alt.Chart(dat.head(200))\
-    .encode(x="name", y="AK")\
-    .mark_bar()\
-    .properties(
-        width=800,
-        height=300
-    )
+chart4 = alt.Chart(dwellings_table).mark_bar().encode(
+    alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+    alt.Y('livearea_avg', axis=alt.Axis(title="Average Living Area"))
+)
+
+chart5 = alt.Chart(dwellings_table).mark_bar().encode(
+    alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+    alt.Y('numbdrm_avg', axis=alt.Axis(title="Average Number of Bedrooms"))
+)
+
+chart6 = alt.Chart(dwellings_table).mark_bar().encode(
+    alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+    alt.Y('numbaths_avg', axis=alt.Axis(title="Average Number of Bathrooms"))
+)
+
+final_chart4 = create_final_chart(chart4, "Average Living Area in Houses by Year")
+final_chart5 = create_final_chart(chart5, "Average Number of Bedrooms in Houses by Year")
+final_chart6 = create_final_chart(chart6, "Average Number of Bathrooms in Houses by Year")
+
 ```
 
 
 ```{python}
-#| label: GQ1 table
-#| code-summary: table example
+#| label: GQ1 Final chart 4
+#| code-summary: GQ1 Final chart 4
 #| tbl-cap: "Not much of a table"
 #| tbl-cap-location: top
-# Include and execute your code here
-mydat = dat.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
 
-display(mydat)
+final_chart4
+```
 
+```{python}
+#| label: GQ1 Final chart 5
+#| code-summary: GQ1 Final chart 5
+#| tbl-cap: "Not much of a table"
+#| tbl-cap-location: top
+
+
+
+final_chart5
+```
+
+```{python}
+#| label: GQ1 Final chart 6
+#| code-summary: GQ1 Final chart 6
+#| tbl-cap: "Not much of a table"
+#| tbl-cap-location: top
+
+
+
+final_chart6
 ```
 
 
@@ -106,142 +184,443 @@ display(mydat)
 
 __Build a classification model labeling houses as being built “before 1980” or “during or after 1980”.__
 
-_type your results and analysis here_
+_I successfully built a classification model with an impressive 89.9% accuracy. I used the sklearn.ensemble method and selected the RandomForestClassifier classifier from sklearn as my final model choice. During the model development process, I also experimented with other classifiers, including GaussianNB from sklearn, which achieved an average accuracy of approximately 85.6%. Additionally, I tried the DecisionTreeClassifier from sklearn, which yielded around 86% accuracy. Similarly, the GradientBoostingClassifier from sklearn and CatBoostClassifier from catboost also produced comparable accuracy levels, around 86%._
 
 ```{python}
 #| label: GQ2
 #| code-summary: Read and format data
-# Include and execute your code here
+#| include: false
 
+#%% Prepare the features and targets numpy arrays
+features = dwellings_ml[['yrbuilt']].to_numpy()
+targets = dwellings_ml[['before1980']].to_numpy()
 
+'''
+CLASSIFICATION MODEL 2 (RandomForestClassifier)
+'''
+
+features = dwellings_ml[['sprice', 'stories', 'nocars', 'livearea', 'basement', 'numbaths', 'numbdrm', 'totunits', 'arcstyle_SPLIT LEVEL']].to_numpy()
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42)
+classifier2 = RandomForestClassifier(random_state=42)
+classifier2.fit(features_train, targets_train.ravel())
+predictions2 = classifier2.predict(features_test)
+accuracy2 = metrics.accuracy_score(predictions2, targets_test)
 ```
-
-_include figures in chunks and discuss your findings in the figure._
-
-```{python}
-#| label: GQ2 chart
-#| code-summary: plot example
-#| fig-cap: "My useless chart"
-#| fig-align: center
-# Include and execute your code here
-alt.Chart(dat.head(200))\
-    .encode(x = "name", y = "AK")\
-    .mark_bar()
-```
-
-
 ```{python}
 #| label: GQ2 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = dat.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
-
-display(mydat)
+#| code-summary: Read and format data
+print(f"Model 2 (RandomForestClassifier) Accuracy: {accuracy2:.3f}")
 
 ```
+
 
 
 ## GRAND QUESTION 3
 
 __Justify your classification model by discussing the most important features selected by your model.__
 
-_type your results and analysis here_
+_The most notable features for determining whether a house was built before 1980 are 'livearea', 'sprice', and 'arcstyle_one-story'. By leveraging these features, we have a strong chance of accurately identifying whether a house was constructed before 1980._
 
 ```{python}
 #| label: GQ3
 #| code-summary: Read and format data
-# Include and execute your code here
+#| include: false
 
+#%%
+features = dwellings_ml[['sprice', 'stories', 'nocars', 'livearea', 'basement', 'numbaths',
+                         'numbdrm', 'arcstyle_END UNIT', 'arcstyle_MIDDLE UNIT',
+                         'arcstyle_ONE AND HALF-STORY', 'arcstyle_ONE-STORY', 'arcstyle_TWO-STORY',
+                         'status_I', 'gartype_Det', 'gartype_Att', 'quality_C', 'quality_B',
+                         'condition_Good', 'condition_AVG', 'deduct', 'totunits', 'finbsmnt', 'abstrprd']]
+
+targets = dwellings_ml['before1980']
+
+# Split the data into training and testing variables with stratified split
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42, stratify=targets)
+
+# Train the RandomForestClassifier model
+classifier = RandomForestClassifier(random_state=42)
+classifier.fit(features_train, targets_train)
+
+# Make predictions on the test features
+predictions = classifier.predict(features_test)
+
+# Additional Evaluation Metrics
+precision = metrics.precision_score(targets_test, predictions)
+recall = metrics.recall_score(targets_test, predictions)
+f1_score = metrics.f1_score(targets_test, predictions)
+roc_auc = metrics.roc_auc_score(targets_test, predictions)
+
+# Plot feature importance with better formatting
+feature_df = pd.DataFrame({'features': features.columns, 'importance': classifier.feature_importances_})
+feature_chart = alt.Chart(feature_df).mark_bar().encode(
+    x='importance',
+    y=alt.Y('features', sort='-x'),  # Sort features by importance
+    tooltip=['features', 'importance']  # Show tooltip with feature names and importance
+).properties(title="Feature Importance of RandomForestClassifier")
 
 ```
-
-_include figures in chunks and discuss your findings in the figure._
 
 ```{python}
 #| label: GQ3 chart
-#| code-summary: plot example
-#| fig-cap: "My useless chart"
+#| code-summary: GQ3 Importance
 #| fig-align: center
-# Include and execute your code here
-alt.Chart(dat.head(200))\
-    .encode(x = "name", y = "AK")\
-    .mark_bar()
+# Display the feature importance chart
+feature_chart
 ```
 
-
-```{python}
-#| label: GQ3 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = dat.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
-
-display(mydat)
-
-```
 
 ## GRAND QUESTION 4
 
 __Describe the quality of your classification model using 2-3 different evaluation metrics.__
 
-_type your results and analysis here_
+_Confusion matrix is a table that is commonly used to evaluate the performance of a classification model. It provides a comprehensive summary of the model's predictions and their agreement with the actual target labels._
+
+_Confusion matrix ising the following metrics to assess the model's performance:_
+
+_Accuracy: The overall accuracy of the model, calculated as (TP + TN) / (TP + TN + FP + FN). It represents the proportion of correctly classified instances out of the total number of instances._
+
+_Precision: Also known as positive predictive value, it is calculated as TP / (TP + FP). It measures the accuracy of the positive predictions made by the model._
+
+_Recall: Also known as sensitivity or true positive rate, it is calculated as TP / (TP + FN). It measures the proportion of actual positive instances that were correctly identified by the model._
+
+_F1-score: A metric that balances precision and recall, calculated as 2 * (Precision * Recall) / (Precision + Recall). It is useful when you want to consider both false positives and false negatives._
+
+_Support: Also known as true negative rate, it is calculated as TN / (TN + FP). It measures the proportion of actual negative instances that were correctly identified by the model._
 
 ```{python}
-#| label: GQ3
+#| label: GQ4
 #| code-summary: Read and format data
-# Include and execute your code here
+#| include: false
 
-
+accuracy = metrics.accuracy_score(predictions2, targets_test)
+confusion_matrix = metrics.confusion_matrix(targets_test, predictions2)
+classification_report = metrics.classification_report(targets_test, predictions2)
 ```
 
-_include figures in chunks and discuss your findings in the figure._
 
 ```{python}
-#| label: GQ3 chart
-#| code-summary: plot example
-#| fig-cap: "My useless chart"
+#| label: GQ4 chart
+#| code-summary: GQ4 Matrix
 #| fig-align: center
-# Include and execute your code here
-alt.Chart(dat.head(200))\
-    .encode(x = "name", y = "AK")\
-    .mark_bar()
+#| 
+print(f"Accuracy: {accuracy:.3f}")
+print("Confusion Matrix:")
+print(confusion_matrix)
+print("Classification Report:")
+print(classification_report)
+
+# Visualize the confusion matrix
+plt.figure(figsize=(5, 5))
+plt.imshow(confusion_matrix, cmap='Blues', interpolation='nearest')
+plt.colorbar()
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+tick_marks = np.arange(2)
+plt.xticks(tick_marks, ['before1980 = 0', 'before1980 = 1'], rotation=45)
+plt.yticks(tick_marks, ['before1980 = 0', 'before1980 = 1'])
+plt.tight_layout()
+plt.show()
 ```
-
-
-```{python}
-#| label: GQ3 table
-#| code-summary: table example
-#| tbl-cap: "Not much of a table"
-#| tbl-cap-location: top
-# Include and execute your code here
-mydat = dat.head(1000)\
-    .groupby('year')\
-    .sum()\
-    .reset_index()\
-    .tail(10)\
-    .filter(["year", "AK","AR"])
-
-display(mydat)
-
-```
-
 
 
 ## APPENDIX A (Additional Python Code)
 
 ```python
-#paste other your code from your python file (.py) here
+#%%
+# import packages
+import pandas as pd
+import numpy as np
+import altair as alt
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+import catboost as cb
+from sklearn import metrics
+
+#%%
+# import data
+alt.data_transformers.disable_max_rows()
+
+dwellings_denver = 'dwellings_denver.csv'
+dwellings_ml = 'dwellings_ml.csv'
+dwellings_neighborhoods_ml = 'dwellings_neighborhoods_ml.csv'
+
+dwellings_denver = pd.read_csv(dwellings_denver)
+dwellings_ml = pd.read_csv(dwellings_ml)
+dwellings_neighborhoods_ml = pd.read_csv(dwellings_neighborhoods_ml)
+
+
+
+
+# GRAND QUESTION 1
+
+# %%Aggregate data and create the dwellings_table
+dwellings_table = (
+    dwellings_ml.groupby('yrbuilt')
+    .agg(
+        sprice_avg=('sprice', np.average),
+        stories_avg=('stories', np.average),
+        nocars_avg=('nocars', np.average),
+        livearea_avg=('livearea', np.average),
+        numbdrm_avg=('numbdrm', np.average),
+        numbaths_avg=('numbaths', np.average)
+    )
+    .reset_index()
+)
+
+
+
+
+#%% Aggregate data and create the dwellings_table
+dwellings_table = (
+    dwellings_ml.groupby('yrbuilt')
+    .agg(
+        sprice_avg=('sprice', np.average),
+        stories_avg=('stories', np.average),
+        nocars_avg=('nocars', np.average),
+        livearea_avg=('livearea', np.average),
+        numbdrm_avg=('numbdrm', np.average),
+        numbaths_avg=('numbaths', np.average)
+    )
+    .reset_index()
+)
+
+#%% Filter and select desired columns
+dwellings_table = dwellings_table[['yrbuilt', 'sprice_avg', 'stories_avg', 'nocars_avg', 'livearea_avg', 'numbdrm_avg', 'numbaths_avg']]
+
+#%% Create an overlay chart to mark 1980
+overlay = (
+    alt.Chart(dwellings_table.query("yrbuilt == 1980"))
+    .mark_rule(color='red')
+    .encode(x='yrbuilt')
+)
+
+#%% Create a function to generate the final chart with overlay
+def create_final_chart(chart, title):
+    final_chart = (alt.layer(chart, overlay)
+        .configure_title(
+            fontSize=15,
+            anchor="start",
+            subtitleFontSize=11
+        )
+    )
+    final_chart.title = title
+    return final_chart
+
+#%% Create multiple charts with overlays
+# chart1 = alt.Chart(dwellings_table).mark_bar().encode(
+#     alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+#     alt.Y('sprice_avg', axis=alt.Axis(title="Average Selling Price"))
+# )
+
+# chart2 = alt.Chart(dwellings_table).mark_bar().encode(
+#     alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+#     alt.Y('stories_avg', axis=alt.Axis(title="Average Number of Stories"))
+# )
+
+# chart3 = alt.Chart(dwellings_table).mark_bar().encode(
+#     alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+#     alt.Y('nocars_avg', axis=alt.Axis(title="Average Number of Cars in Garage"))
+# )
+
+chart4 = alt.Chart(dwellings_table).mark_bar().encode(
+    alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+    alt.Y('livearea_avg', axis=alt.Axis(title="Average Living Area"))
+)
+
+chart5 = alt.Chart(dwellings_table).mark_bar().encode(
+    alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+    alt.Y('numbdrm_avg', axis=alt.Axis(title="Average Number of Bedrooms"))
+)
+
+chart6 = alt.Chart(dwellings_table).mark_bar().encode(
+    alt.X('yrbuilt', axis=alt.Axis(title="Year Built")),
+    alt.Y('numbaths_avg', axis=alt.Axis(title="Average Number of Bathrooms"))
+)
+
+
+#%% Generate final charts with overlays
+# final_chart1 = create_final_chart(chart1, "Average Selling Price of Houses by Year")
+# final_chart2 = create_final_chart(chart2, "Average Number of Stories in Houses by Year")
+# final_chart3 = create_final_chart(chart3, "Average Number of Cars in Garage by Year")
+final_chart4 = create_final_chart(chart4, "Average Living Area in Houses by Year")
+final_chart5 = create_final_chart(chart5, "Average Number of Bedrooms in Houses by Year")
+final_chart6 = create_final_chart(chart6, "Average Number of Bathrooms in Houses by Year")
+
+# #%% Display the final charts
+# final_chart1
+# #%%
+# final_chart2
+# #%%
+# final_chart3
+#%%
+final_chart4
+#%%
+final_chart5
+#%%
+final_chart6
+
+
+
+
+
+# GRAND QUESTION 2
+
+#%%
+dwellings_ml.describe()
+
+'''
+CLASSIFICATION MODEL 1 (GaussianNB)
+'''
+
+#%% Prepare the features and targets numpy arrays
+features = dwellings_ml[['yrbuilt']].to_numpy()
+targets = dwellings_ml[['before1980']].to_numpy()
+
+# Split the data into training and testing variables with stratified split
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42, stratify=targets)
+
+# Classification Model 1 (GaussianNB)
+classifier1 = GaussianNB()
+classifier1.fit(features_train, targets_train.ravel())
+predictions1 = classifier1.predict(features_test)
+accuracy1 = metrics.accuracy_score(predictions1, targets_test)
+print(f"Model 1 (GaussianNB) Accuracy: {accuracy1:.3f}")
+
+'''
+CLASSIFICATION MODEL 2 (RandomForestClassifier)
+'''
+
+features = dwellings_ml[['sprice', 'stories', 'nocars', 'livearea', 'basement', 'numbaths', 'numbdrm', 'totunits', 'arcstyle_SPLIT LEVEL']].to_numpy()
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42)
+classifier2 = RandomForestClassifier(random_state=42)
+classifier2.fit(features_train, targets_train.ravel())
+predictions2 = classifier2.predict(features_test)
+accuracy2 = metrics.accuracy_score(predictions2, targets_test)
+print(f"Model 2 (RandomForestClassifier) Accuracy: {accuracy2:.3f}")
+
+'''
+CLASSIFICATION MODEL 3 (DecisionTreeClassifier)
+'''
+
+# Prepare the features and targets numpy arrays
+features = dwellings_ml[['sprice', 'stories', 'nocars', 'livearea', 'basement', 'numbaths', 'numbdrm', 'totunits', 'arcstyle_SPLIT LEVEL']].to_numpy()
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42)
+classifier3 = DecisionTreeClassifier()
+classifier3.fit(features_train, targets_train)
+predictions3 = classifier3.predict(features_test)
+accuracy3 = metrics.accuracy_score(predictions3, targets_test)
+print(f"Model 3 (DecisionTreeClassifier) Accuracy: {accuracy3}")
+
+'''
+CLASSIFICATION MODEL 4 (GradientBoostingClassifier)
+'''
+
+# Prepare the features and targets numpy arrays
+features = dwellings_ml[['sprice', 'stories', 'nocars', 'livearea', 'basement', 'numbaths', 'numbdrm', 'totunits', 'arcstyle_SPLIT LEVEL']].to_numpy()
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42)
+classifier4 = GradientBoostingClassifier(random_state=42)
+classifier4.fit(features_train, targets_train.ravel())
+predictions4 = classifier4.predict(features_test)
+accuracy4 = metrics.accuracy_score(predictions4, targets_test)
+print(f"Model 4 (GradientBoostingClassifier) Accuracy: {accuracy4}")
+
+
+'''
+CLASSIFICATION MODEL 5 (CatBoostClassifier)
+'''
+
+# Prepare the features and targets numpy arrays
+features = dwellings_ml[['sprice', 'stories', 'nocars', 'livearea', 'basement', 'numbaths', 'numbdrm', 'totunits', 'arcstyle_SPLIT LEVEL']].to_numpy()
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42)
+classifier5 = cb.CatBoostClassifier(iterations=10, depth=6, learning_rate=1, loss_function='Logloss', verbose=False)
+classifier5.fit(features_train, targets_train)
+predictions5 = classifier5.predict(features_test)
+accuracy5 = metrics.accuracy_score(predictions5, targets_test)
+print(f"Model 5 (CatBoostClassifier) Accuracy: {accuracy5}")
+
+
+
+
+
+
+# grand question 3
+
+#%%
+features = dwellings_ml[['sprice', 'stories', 'nocars', 'livearea', 'basement', 'numbaths',
+                         'numbdrm', 'arcstyle_END UNIT', 'arcstyle_MIDDLE UNIT',
+                         'arcstyle_ONE AND HALF-STORY', 'arcstyle_ONE-STORY', 'arcstyle_TWO-STORY',
+                         'status_I', 'gartype_Det', 'gartype_Att', 'quality_C', 'quality_B',
+                         'condition_Good', 'condition_AVG', 'deduct', 'totunits', 'finbsmnt', 'abstrprd']]
+
+targets = dwellings_ml['before1980']
+
+# Split the data into training and testing variables with stratified split
+features_train, features_test, targets_train, targets_test = train_test_split(features, targets, test_size=0.3, random_state=42, stratify=targets)
+
+# Train the RandomForestClassifier model
+classifier = RandomForestClassifier(random_state=42)
+classifier.fit(features_train, targets_train)
+
+# Make predictions on the test features
+predictions = classifier.predict(features_test)
+
+# Additional Evaluation Metrics
+precision = metrics.precision_score(targets_test, predictions)
+recall = metrics.recall_score(targets_test, predictions)
+f1_score = metrics.f1_score(targets_test, predictions)
+roc_auc = metrics.roc_auc_score(targets_test, predictions)
+
+print(f"Model 2 (RandomForestClassifier) Precision: {precision:.3f}")
+print(f"Model 2 (RandomForestClassifier) Recall: {recall:.3f}")
+print(f"Model 2 (RandomForestClassifier) F1-Score: {f1_score:.3f}")
+print(f"Model 2 (RandomForestClassifier) ROC-AUC: {roc_auc:.3f}")
+
+# Plot feature importance with better formatting
+feature_df = pd.DataFrame({'features': features.columns, 'importance': classifier.feature_importances_})
+feature_chart = alt.Chart(feature_df).mark_bar().encode(
+    x='importance',
+    y=alt.Y('features', sort='-x'),  # Sort features by importance
+    tooltip=['features', 'importance']  # Show tooltip with feature names and importance
+).properties(title="Feature Importance of RandomForestClassifier")
+
+# Display the feature importance chart
+feature_chart
+
+
+
+
+
+
+#%% GRAND QUESTION 4
+
+accuracy = metrics.accuracy_score(predictions2, targets_test)
+confusion_matrix = metrics.confusion_matrix(targets_test, predictions2)
+classification_report = metrics.classification_report(targets_test, predictions2)
+
+print(f"Accuracy: {accuracy:.3f}")
+print("Confusion Matrix:")
+print(confusion_matrix)
+print("Classification Report:")
+print(classification_report)
+
+# Visualize the confusion matrix
+plt.figure(figsize=(5, 5))
+plt.imshow(confusion_matrix, cmap='Blues', interpolation='nearest')
+plt.colorbar()
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+tick_marks = np.arange(2)
+plt.xticks(tick_marks, ['before1980 = 0', 'before1980 = 1'], rotation=45)
+plt.yticks(tick_marks, ['before1980 = 0', 'before1980 = 1'])
+plt.tight_layout()
+plt.show()
+
+# %%
+
 ```
