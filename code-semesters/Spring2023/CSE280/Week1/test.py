@@ -22,3 +22,4 @@ def print_truth_table(operation):
 
 print_truth_table(implies)
 print_truth_table(iff)
+sdkgjnsdg
