@@ -1,0 +1,113 @@
+---
+title: "Project 3 - Task 2"
+author: "Joshua Ludwig"
+date: "2023-11-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Finding Expected Value and Variance
+
+In this task, we aim to determine the Expected Value (EV) and Variance of each stochastic variable to fit the model. Below are the Expected Value and Variance for each function obtained from Wolfram Mathematica:
+
+#### **$f_0$**
+![](f0.png)
+
+---
+
+#### **$f_1$**
+![](f1.png)
+
+---
+
+#### **$f_2$**
+![](f2.png)
+
+---
+
+#### **$f_3$**
+![](f3.png)
+
+---
+
+### Find a & b for $f_0$
+
+$EV = 2.79164 = \frac{a+b}{2}$, $Var = 10.97915 = \frac{(a-b)^2}{12}$
+
+Solving these equations, we find:
+
+$b=2EV-a$, $a=\frac{\sqrt{12Var}-2EV}{-2}$
+
+```{r}
+EV <- 2.79164
+V <- 10.97915
+
+# Calculate 'a' and 'b'
+a <- (sqrt(12 * V) - 2 * EV) / -2
+b <- 2 * EV - a
+
+# Display results
+a
+b
+b - a
+
+```
+### Fitted Distribution for $f_0$
+
+```{r}
+# Define function for f0
+f0 <- function(x,a,b){0*x+1/(b-a)}
+
+# Plot histogram
+library(data4soils)
+Ng <- cfbp_fpjuliet$ng
+hist(Ng, probability = TRUE, main = "Fitted distribution", breaks = 100, col = "lightblue", xlab = "X-axis Label", ylab = "Y-axis Label")
+
+# Plot fitted line
+x <- seq(0, 20, 2)
+lines(x, f0(x, a, b), col = "red", lwd = 2)
+```
+
+According to the code, a = -2.947476 and b = 8.530756.
+The best fitted model for $f_0$ is given by
+ 
+$f_0(x;a,b) = \frac{1}{b-a} = \frac{1}{11.47823}$
+
+However, this model is not ideal as the line is flat and does not align with the plot.
+
+### Find $\lambda$ for $f_3$
+
+```{r}
+lambda <- 1 / EV
+lambda
+```
+
+Find the λ of f3:
+EV = 2.79164 = $\frac1λ$
+λ = $\frac1{EV}$
+
+
+### Fitted Exponential Distribution for $f_3$
+```{r}
+# Define function for f3
+f3 <- function(x, l) {
+  l * exp(l * (-x))
+}
+
+# Plot histogram
+hist(Ng, probability = TRUE, main = "Fitted exponential distribution", breaks = 100, col = "lightgreen", xlab = "X-axis Label", ylab = "Y-axis Label")
+
+# Plot fitted line
+l <- 0.358
+x <- seq(0, 100, 2)
+lines(x, f3(x, l), col = "darkgreen", lwd = 2)
+```
+
+According to the code, λ = 0.358
+The best-fitted model for $f_3$ is given by:
+
+$f_3(x;λ) = λe^{−λx} = 0.358e^{−0.358x}$
+
+This model reasonably follows the pattern, indicating it is a good fit.

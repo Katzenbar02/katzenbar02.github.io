@@ -1,0 +1,82 @@
+---
+title: "Project 1 - Task 2"
+author: "Joshua Ludwig"
+date: "2023-10-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Function 3
+
+First, we create a function called `f3`, which has four variables that we need: `x`, `s`, `r`, and `L`. Inside the function, there is an equation:
+
+
+f_3(x; s, r, L) = s + re^{-Lx}
+
+
+The `s` variable shifts the graph up and down. The `r` variable stretches the graph vertically. The `L` variable compresses the graph vertically.
+
+In our first graph, the `x` variable spans from -500 to 500. The `s` variable is set to 40, so it shifts the graph up 40 units. The `r1` variable is 3.5, which stretches the left end of the line vertically up. The `L` variable is set to 0.005, which also stretches the graph vertically.
+
+In our second graph, we only change the `r` variable to -3.5, which reflects the graph across the x-axis.
+
+```{r f3}
+rm(list=ls())
+f3 <- function(x, s, r, L) {
+ s + r * exp(-L * x)
+}
+
+x <- seq(-500, 500)
+s <- 40
+r1 <- 3.5
+L <- 0.005
+y1 <- f3(x, s, r1, L)
+
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(x, y1, type='l', xlim=c(-500, 500))
+
+r2 <- -3.5
+y2 <- f3(x, s, r2, L)
+
+plot(x, y2, type='l', xlim=c(-500, 500))
+mtext('Changing r in f3', side = 3, line = 0)
+```
+
+## Function 5
+
+First, we create a function called `f5`, which has four variables that we need: `x`, `a`, `b`, and `C`. Inside the function, there is an equation:
+
+
+f_5(x; a, b, C) = (a + bx)e^{-Cx}
+
+
+The `a` variable shifts the maximum left and up. The `b` variable decreases the peak and stretches the graph vertically. The `C` variable compresses the graph in the middle and has the peak shift from the middle to the left.
+
+In our first graph, we set the `x` variable to sequence from -500 to 1500. The `a` variable is set to 25, which shifts the peak up exponentially but sets the y-intercept to 25. The `b` variable is set to 0.063, which seems to have a reverse effect on the peak from the `a` variable, which then shifts the peak down exponentially. The `C` variable is set to 0.0024, which stretches the left side of the graph upwards.
+
+In our second graph, we change the `b` variable to -0.1, which exponentially increases the left side and then plateaus at the x-axis.
+
+```{r f5}
+rm(list=ls())
+f5 <- function(x, a, b, C) {
+ a + b * x * exp(-C * x)
+}
+
+x <- seq(-500, 1500)
+a <- 25
+b1 <- 0.063
+C <- 0.0024
+y1 <- f5(x, a, b1, C)
+
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(x, y1, type='l', xlim=c(-500, 1500))
+
+b2 <- -0.1
+y2 <- f5(x, a, b2, C)
+
+plot(x, y2, type='l', xlim=c(-500, 500))
+mtext('Changing b in f5', side = 3, line = 0)
+```

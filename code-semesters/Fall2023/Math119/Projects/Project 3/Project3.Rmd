@@ -1,0 +1,57 @@
+---
+title: "Project3"
+author: "Joshua Ludwig"
+date: "2023-12-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Backgorund
+
+How much explosive material remains in the soil? The military is concerned about amount of explosives that remain in the soils of training ranges because soldiers are out on the training range and explosive residues are carcinogens (they cause cancer). Collecting a representative sample from the training ranges is difficult to do and researchers are continuing to work on developing, refining, and validating sampling methods.
+
+Our work in this project relies on assumptions and use of probability distributions. We will (1) fit probability distributions to data, (2) create simulated samples from those fitted probability distributions, and (3) use the fitted probability distributions to provide probability information about explosive residue in the surface soil of a training range.
+
+The Environment Protection Agency (EPA) specifies regulatory levels of Nitroglycerin concentrations for human heath. For this project, we will use 10 mg/kg1 as the toxicity threshold for surface soil of this training range.
+
+Below, you'll find the histogram detailing the distribution of Nitroglycerin measurements. Additionally, we've calculated the mean and variance of the dataset.
+
+```{r}
+library(data4soils)
+Ng <- cfbp_fpjuliet$ng
+hist(Ng, probability = TRUE, breaks = 100, main = "Toxicity Distribution in Soils")
+mean(Ng) # EV
+var(Ng)
+```
+
+## Introduction to probability models:
+
+**Uniform Distribution**
+
+$f_0(x;a,b) = \frac{1}{b-a}$ with −∞ < a < x < b < ∞ (and 0 otherwise)
+
+ The probability is the same (uniform) for all measurements between a and b.
+
+**Normal Distribution**
+
+$f_1(x; \mu,\sigma) = \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$ with μ > 0, σ > 0, and −∞ < x < ∞
+
+This distribution is symmetric and defined for all values of x (both positive and negative values are possible).
+
+
+**Gamma Distribution**
+
+$f_2(x; \alpha,\beta) = \frac{\beta^{\alpha}}{\Gamma(\alpha)}x^{\alpha-1}e^{-\beta x}$ with α > 0, β > 0, and x ≥ 0 (and 0 otherwise)
+
+One way to think about the gamma function is a generalization of the factorial to noninteger values.
+
+**Exponential Distribution**
+
+$f_3(x; \lambda) = \lambda e^{-\lambda x}$ with λ > 0 and x ≥ 0 (and 0 otherwise)
+
+The exponential distribution is often thought of as a “waiting time” model. 
+
+Fitted Models

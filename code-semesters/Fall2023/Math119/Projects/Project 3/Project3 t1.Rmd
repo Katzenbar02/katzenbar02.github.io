@@ -1,0 +1,94 @@
+---
+title: "Project3 t1 test"
+author: "Joshua Ludwig"
+date: "2023-11-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Background
+
+Our investigation revolves around determining the remaining explosive material in the soil of military training ranges. This concern stems from the potential health risks posed by explosive residues, known carcinogens that can adversely affect soldiers present on the training grounds. Our research involves collecting a representative soil sample from these ranges, focusing on the development, refinement, and validation of sampling methods.
+
+Below, you'll find the histogram detailing the distribution of Nitroglycerin measurements. Additionally, we've calculated the mean and variance of the dataset.
+
+```{r}
+library(data4soils)
+Ng <- cfbp_fpjuliet$ng
+hist(Ng, probability = TRUE)
+mean(Ng) # EV
+var(Ng)
+```
+
+### Parameter Exploration of $f_3$
+
+In the course of exploring parameters for 
+$f_3(x; \lambda) = \lambda e^{-\lambda x}$, I created two plots. The first utilized λ = 0.3, resulting in a specific plot. The second employed λ = 1, yielding a different representation. In summary, a higher λ value leads to a steeper line in the plot.
+
+```{r}
+# Define the f3 function
+f3 <- function(x, l) {
+  l * exp(-l * x)
+}
+
+# Generate x values for the plot
+x <- seq(0, 20, 2)
+
+# Plot for lambda = 0.3
+hist(Ng, probability = TRUE, main = "Fitted gamma distribution", breaks = 100)
+lines(x, f3(x, 0.3), col = 2)
+
+# Plot for lambda = 1
+hist(Ng, probability = TRUE, main = "Fitted gamma distribution", breaks = 100)
+lines(x, f3(x, 1), col = 2)
+```
+
+### Visual Fitting of  $f_2$ and $f_3$ to Nitroglycerin Measurements
+
+For the probability density histogram of the 100 Nitroglycerin measurements, I visually fitted two functions: 
+
+#### $f_2(x; \alpha,\beta) = \frac{\beta^{\alpha}}{\Gamma(\alpha)}x^{\alpha-1}e^{-\beta x}$
+
+The parameters α =0.7 and β=0.25 appeared to be fitting well.
+
+```{r}
+# Define the f2 function
+f2 <- function(x, a, b) {
+  (b^a) / gamma(a) * x^(a - 1) * exp(-b * x)
+}
+
+# Plot for f2
+hist(Ng, probability = TRUE, main = "Fitted normal distribution", breaks = 100)
+lines(x, f2(x, 0.7, 0.25), col = 2)
+```
+
+#### $f_3(x; \lambda) = \lambda e^{-\lambda x}$
+
+Here, λ=0.75 seemed to provide an appropriate fit.
+
+```{r}
+set.seed(1228)
+tmp2 <- rgamma(25000, shape = 0.7, rate = 0.25)
+a <- length(which(tmp2 > 10))
+probability_f2 <- a / 25000
+
+# Print probabilities
+cat("Probability for f2:", probability_f2, "\n")
+```
+
+### Simulation Results
+Utilizing the parameter values from the visually fitted $f_2$ model and the rgamma() command, we simulated a sample of 25,000 random measurements. Of these, 1,159 measurements exceeded 10 mg/kg of explosive, resulting in a probability of 0.04468.
+
+```{r}
+# Simulate data from f3 and count values above 10 mg/kg
+tmp3 <- rexp(25000, rate = 0.75)
+b <- length(which(tmp3 > 10))
+probability_f3 <- b / 25000
+
+cat("Probability for f3:", probability_f3)
+```
+
+Similarly, by employing the parameter values from the visually fitted $f_3$ model and the rexp() command, we simulated another sample of 25,000 random measurements. In this case, 14 measurements surpassed 10 mg/kg of explosive, yielding a probability of 0.00044.

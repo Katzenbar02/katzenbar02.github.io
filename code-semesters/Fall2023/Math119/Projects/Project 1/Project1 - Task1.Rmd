@@ -1,0 +1,35 @@
+---
+title: "Project 1 - Task 1"
+author: "Joshua Ludwig"
+date: "2023-10-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+I conducted an analysis using the led_bulb() function from the data4led package to gather data on a single LED bulb. With the data points from the package, I created a data frame called "bulb," which contained measurements for one randomly selected bulb based on a unique seed. I used this data to calculate the bulb's intensity over time, capturing its performance as it evolves.
+
+To generate data for a single LED bulb, we can use the led_bulb() function from the data4led package. After loading the data, we can create a data frame called "bulb" that contains measurements for one randomly selected bulb based on a unique seed. With this data, we can calculate the bulb's intensity over time, capturing its performance as it evolves.
+
+Using the plot() function, I generated a scatter plot that visually represents how the LED bulb's intensity changes over time. The plot clearly shows a downward trend in bulb intensity, which is characteristic of LED bulbs as they gradually degrade over time. This decline in lumen output is crucial to consider when selecting LED bulbs, as it means that the bulb's brightness will decrease after several years of use.
+
+Within the plot, we can observe that the LED bulb starts at 100% intensity and fluctuates between 99% and up to 101% over time. This variation in intensity is interesting because it indicates that the LED bulb reaches its maximum intensity at the half-life of the LED and continues to emit light at over 100% intensity until the end of its lifetime. This behavior might have practical implications for users who require consistent lighting levels over an extended period.
+
+Overall, this analysis using the led_bulb() function and the plot() function provides valuable insights into LED bulb performance. Understanding how LED bulbs degrade over time is crucial for making informed decisions when selecting lighting solutions for various applications.
+
+
+```{r bulb}
+library(data4led)
+
+bulb <- led_bulb(1,seed = 1228)
+head(bulb)
+
+# Create a time vs. bulb intensity (as a percent of the original lumens) scatter plot
+plot(x = bulb$hours, y = bulb$percent_intensity, type = "p", col = "black", main = "Time vs. Bulb Intensity", xlab = "Hours", ylab = "Percent Intensity")
+
+
+```

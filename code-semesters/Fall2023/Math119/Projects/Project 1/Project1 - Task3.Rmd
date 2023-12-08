@@ -1,0 +1,96 @@
+---
+title: "Project 1 - Task 3"
+author: "Joshua Ludwig"
+date: "2023-10-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+We have the measurements of 44 light bulbs, and we see the theoretical intensity of the light bulbs over the course of 80,000 hours. Using six different equations, we explore the expected intensity of the light bulbs over time. While these equations are not entirely accurate, each graph provides a reasonable approximation of the light bulbs' lifetimes over time.
+
+```{r bulb}
+rm(list=ls())
+library(data4led)
+bulb <- led_bulb(1,seed = 1228)
+
+t <- bulb$hours
+y <- bulb$percent_intensity
+
+f2 <- function(x,a0=0,a1=0,a2=1){ a0 + a1*x + a2*x^2 }
+f3 <- function(x,a0=100,a1=0,a2=1){ (100-a1) + a1*exp(-a2*x) }
+f4 <- function(x,a0=0,a1=0,a2=1){a0+a1*x+a2*log(0.005*x+1)}
+f5 <- function(x,a0=100,a1=0,a2=1){ (a0 + a1*x)*exp(-a2*x) }
+
+x <- seq(-10,160001,2)
+y0 <- f2(x,a0=100,a1=0,a2=0)
+y1 <- f2(x,a0=100,a1=6e-4,a2=0)
+y2 <- f2(x,a0=100,a1=.95e-3,a2=-1.3e-7)
+y3 <- f3(x,a0=101.3,a1=-1.3,a2=0.00114)
+y4 <- f4(x,a0=100,a1=-2.4e-4,a2=0.9)
+y5 <- f5(x,a0=100,a1=6e-3,a2=4.95e-5)
+```
+
+In graph f0, we observe that the intensity of the bulbs remains at a constant 100% throughout their entire lifespan. This suggests that the light bulbs have an infinite life span, maintaining the same intensity throughout their existence.
+
+```{r}
+par(mfrow=c(1,2),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f0')
+lines(x,y0,col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,y0,col=2)
+```
+
+In graph f1, we observe that the light bulb's intensity is constant and continues to grow. This implies that the light bulbs' intensity increases over time, and the bulbs essentially have an infinite lifetime.
+
+```{r}
+par(mfrow=c(1,2),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f1')
+lines(x,y1,col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,y1,col=2)
+```
+
+In graph f2, we can see that the light intensity grows to a maximum of 101.3% and then starts to decrease. The intensity reaches zero at around 30,000 hours, indicating that if a light is continuously left on, it would last approximately 3.5 years.
+
+```{r}
+par(mfrow=c(1,2),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f2')
+lines(x,y2,col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,y2,col=2)
+```
+
+Graph f3 shows that the light intensity grows to a maximum slightly above 101% and then plateaus around 3,000 hours, continually growing slightly without ever dying. This suggests that the light bulbs have an infinite lifetime.
+
+```{r}
+par(mfrow=c(1,2),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f3')
+lines(x,y3,col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,y3,col=2)
+```
+
+Graph f4 indicates that the light intensity reaches a maximum at 101.2% and then slowly starts to decrease after about 2,500 hours. The light reaches zero after approximately 600,000 hours, implying that a light bulb would reach the end of its life after about 70 years.
+
+```{r}
+par(mfrow=c(1,2),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f4')
+lines(x,y4,col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,160000),ylim = c(-10,120))
+lines(x,y4,col=2)
+```
+
+Graph f5 illustrates that the light intensity reaches a maximum around 3,000 hours, after which it decreases quickly. Around 50,000 hours, the intensity starts to decrease more slowly. Analyzing the slope, we can infer that light bulbs reach the end of their life around 140,000 hours, which translates to about 15 years on average.
+
+```{r}
+par(mfrow=c(1,2),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f5')
+lines(x,y5,col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,y5,col=2)
+```
+

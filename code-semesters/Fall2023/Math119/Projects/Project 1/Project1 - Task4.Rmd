@@ -1,0 +1,122 @@
+---
+title: "Project 1 -Task 4"
+author: "Joshua Ludwig"
+date: "2023-10-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+In this analysis, we investigate the expected intensity of 44 light bulbs over the course of 80,000 hours using six different equations. These equations provide approximations of the light bulbs' lifetimes over time. The equations used are denoted as f2, f3, f4, f5, y2, and y4, each with distinct parameter values to represent different characteristics of the light bulbs.
+
+Let's begin by exploring the calculations for the time at which the LED bulbs reach 80% intensity for three of these equations: y2, y4, and y5.
+
+```{r bulb}
+rm(list=ls())
+library(data4led)
+bulb <- led_bulb(1,seed = 1228)
+
+t <- bulb$hours
+y <- bulb$percent_intensity
+
+f2 <- function(x,a0=0,a1=0,a2=1){ a0 + a1*x + a2*x^2 }
+f3 <- function(x,a0=100,a1=0,a2=1){ (100-a1) + a1*exp(-a2*x) }
+f4 <- function(x,a0=0,a1=0,a2=1){a0+a1*x+a2*log(0.005*x+1)}
+f5 <- function(x,a0=100,a1=0,a2=1){ (a0 + a1*x)*exp(-a2*x) }
+
+x <- seq(-10,160001,2)
+y0 <- f2(x,a0=100,a1=0,a2=0)
+y1 <- f2(x,a0=100,a1=6e-4,a2=0)
+y2 <- f2(x,a0=100,a1=.95e-3,a2=-1.3e-7)
+y3 <- f3(x,a0=101.3,a1=-1.3,a2=0.00114)
+y4 <- f4(x,a0=100,a1=-2.4e-4,a2=0.9)
+y5 <- f5(x,a0=100,a1=6e-3,a2=4.95e-5)
+```
+
+The following code uses the uniroot() function to find the time at which each function reaches 80% intensity:
+```{r}
+#result_y0 <- uniroot(function(x) f2(x, a0 = 100, a1 = 0, a2 = 0) - 80, interval = c(0, 80000))
+#result_y1 <- uniroot(function(x) f2(x, a0 = 100, a1 = 6e-4, a2 = 0) - 80, interval = c(0, 80000))
+result_y2 <- uniroot(function(x) f2(x, a0 = 100, a1 = 0.95e-3, a2 = -1.3e-7) - 80, interval = c(0, 80000))
+#result_y3 <- uniroot(function(x) f3(x, a0 = 101.3, a1 = -1.3, a2 = 0.00114) - 80, interval = c(0, 80000))
+result_y4 <- uniroot(function(x) f4(x, a0 = 100, a1 = -2.4e-4, a2 = 0.9) - 80, interval = c(0, 160000))
+result_y5 <- uniroot(function(x) f5(x, a0 = 100, a1 = 6e-3, a2 = 4.95e-5) - 80, interval = c(0, 80000))
+```
+
+## Calculation 1: Time to Reach 80% Intensity for y2
+
+Consider the equation $y2$ with parameters $a_0 = 100$, $a_1 = 0.95 \times 10^{-3}$, and $a_2 = -1.3 \times 10^{-7}$. Using the `uniroot()` function, we solve the equation $f2(x, 100, 0.95 \times 10^{-3}, -1.3 \times 10^{-7}) = 80$ to find the time at which the LED bulbs reach 80% intensity.
+
+**Result:** The time to reach 80% intensity for $y2$ is approximately **16,584.3 hours**.
+
+<img src="C:\Users\Joshu\katzenbar02.github.io\katzenbar02.github.io\code-semesters\Fall2023\Math119\Projects\Project 1\task3 imgs\y2.jpg" alt="Alt text" width="50%"/>
+
+```{r}
+result_y2
+```
+
+## Calculation 2: Time to Reach 80% Intensity for y4
+
+Next, we consider the equation $y4$ with parameters $a0=100$, $a1=-2.4×10^{-4}$, and $a2=0.9$. Similar to the previous calculation, we use the `uniroot` function to find the time at which the LED bulbs reach 80% intensity by solving the equation $f4(x,100,-2.4×10^{-4},0.9)=80$.
+
+**Result:** The time to reach 80% intensity for $y4$ is approximately **106,895.2** hours.
+
+<img src="C:\Users\Joshu\katzenbar02.github.io\katzenbar02.github.io\code-semesters\Fall2023\Math119\Projects\Project 1\task3 imgs\y4.jpg" alt="Alt text" width="50%"/>
+
+```{r}
+result_y4
+```
+
+## Calculation 3: Time to Reach 80% Intensity for y5
+
+Finally, we consider the equation $y5$ with parameters $a0=100$, $a1=6×10^{-3}$, and $a2=4.95×10^{-5}$. Using the `uniroot` function, we solve the equation $f5(x,100,6×10^{-3},4.95×10^{-5})=80$ to find the time at which the LED bulbs reach 80% intensity.
+
+**Result:** The time to reach 80% intensity for $y5$ is approximately **20,956.77** hours.
+
+<img src="C:\Users\Joshu\katzenbar02.github.io\katzenbar02.github.io\code-semesters\Fall2023\Math119\Projects\Project 1\task3 imgs\y5.jpg" alt="Alt text" width="50%"/>
+
+```{r}
+result_y5
+```
+## Cannot Reach 80% Intensity
+
+**y0:**
+
+The model for y0 is represented by the equation
+\[f_2(x, 100, 0, 0) = 100\]
+In this case, $a_0 = 100$, $a_1 = 0$, and $a_2 = 0$.
+
+In this equation, the second and third terms ($a_1$ and $a_2$) are both zero, which means that the intensity remains constant at 100% over time ($f_2(x, 100, 0, 0) = 100$). As a result, the intensity never decreases, and it's impossible for it to reach 80%.
+
+<img src="C:\Users\Joshu\katzenbar02.github.io\katzenbar02.github.io\code-semesters\Fall2023\Math119\Projects\Project 1\task3 imgs\y0.jpg" alt="Alt text" width="50%"/>
+
+**y1:**
+
+The model for y1 is represented by the equation
+\[f_2(x, 100, 6 \times 10^{-4}, 0)\]
+Here, $a_0 = 100$, $a_1 = 6 \times 10^{-4}$, and $a_2 = 0$. Let's analyze the equation:
+
+\[f_2(x, 100, 6 \times 10^{-4}, 0) = 100 + 6 \times 10^{-4} x\]
+
+In this case, the intensity is linearly increasing over time with a positive slope ($6 \times 10^{-4} x$). Since the slope is positive and constant, the intensity continues to grow at a consistent pace. It never decreases, and as a result, it cannot reach 80%.
+
+<img src="C:\Users\Joshu\katzenbar02.github.io\katzenbar02.github.io\code-semesters\Fall2023\Math119\Projects\Project 1\task3 imgs\y1.jpg" alt="Alt text" width="50%"/>
+
+**y3:**
+
+The model for y3 is represented by the equation
+\[f_3(x, 101.3, -1.3, 0.00114)\]
+Here, $a_0 = 101.3$, $a_1 = -1.3$, and $a_2 = 0.00114$. Let's examine the equation:
+
+\[f_3(x, 101.3, -1.3, 0.00114) = (100 - 1.3) + 1.3 e^{-0.00114x}\]
+
+In this equation, the intensity decreases as an exponential function of time ($e^{-0.00114x}$). Initially, it decreases rapidly, but as time progresses, the decrease rate flattens out. However, it never reaches 80% because the exponential decrease continues indefinitely.
+
+<img src="C:\Users\Joshu\katzenbar02.github.io\katzenbar02.github.io\code-semesters\Fall2023\Math119\Projects\Project 1\task3 imgs\y3.jpg" alt="Alt text" width="50%"/>
+
+**Summary**
+
+In summary, y0 remains at a constant 100% intensity because its slope is horizontal, y1 experiences constant positive growth due to a positive slope, and y3 follows an exponential decrease where the slope flattens out as time passes. None of these functions can reach 80% intensity.
