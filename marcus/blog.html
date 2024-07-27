@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Evans Group - Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><img src="content/2 BLUE.png" alt="Logo"></a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Me</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="blog">
+        <div class="container">
+            <h2>LinkedIn Posts</h2>
+            <div class="posts-container">
+                <button class="arrow left-arrow" onclick="prevPost()">&#10094;</button>
+                <div id="linkedin-posts">
+                    <!-- LinkedIn posts will be injected here by JavaScript -->
+                </div>
+                <button class="arrow right-arrow" onclick="nextPost()">&#10095;</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 The Mark Evans Group HR Business Solutions. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

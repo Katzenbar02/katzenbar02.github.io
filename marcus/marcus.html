@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Evans Group</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo"><img src="content/2 BLUE.png" alt="Logo"></a>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Me</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <video autoplay muted loop id="bg-video">
+            <source src="content/consult.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="video-overlay"></div>
+        <div class="container">
+            <h1>The Mark Evans Group HR Business Solutions</h1>
+            <p>Empowering Your Workforce, Enhancing Your Business</p>
+            <a href="#services" class="btn">Discover How</a>
+        </div>
+    </header>
+
+    <section id="home">
+        <div class="container">
+            <h2>Welcome to The Mark Evans Group HR Business Solutions</h2>
+            <p>Hi, I’m Marcus E. Ludwig, an expert in human resources and contract work, dedicated to helping businesses streamline their HR processes and enhance workforce productivity.</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <p>Detailed overview of your experience, expertise, and achievements in HR and contract work.</p>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2>Services</h2>
+            <div class="service">
+                <h3>HR Consultancy</h3>
+                <p>Detailed description of HR consultancy services.</p>
+            </div>
+            <div class="service">
+                <h3>Employee Training & Development</h3>
+                <p>Detailed description of training and development services.</p>
+            </div>
+            <div class="service">
+                <h3>Contract Work Solutions</h3>
+                <p>Detailed description of contract work solutions.</p>
+            </div>
+            <div class="service">
+                <h3>HR Policy Development</h3>
+                <p>Detailed description of HR policy development services.</p>
+            </div>
+            <div class="service">
+                <h3>Recruitment & Staffing</h3>
+                <p>Detailed description of recruitment and staffing services.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <div class="container">
+            <h2>Testimonials</h2>
+            <div class="testimonial">
+                <p>"Marcus has been instrumental in transforming our HR processes. His expertise is unparalleled." - Client Name</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog">
+        <div class="container">
+            <h2>LinkedIn Posts</h2>
+            <div class="posts-container">
+                <button class="arrow left-arrow" onclick="prevPost()">&#10094;</button>
+                <div id="linkedin-posts">
+                    <!-- LinkedIn posts will be injected here by JavaScript -->
+                </div>
+                <button class="arrow right-arrow" onclick="nextPost()">&#10095;</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2>Contact</h2>
+            <form action="#" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+            <p>Email: <a href="mailto:joshuagludwig@example.com">joshuagludwig@example.com</a></p>
+            <p>Phone: 123-456-7890</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 The Mark Evans Group HR Business Solutions. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

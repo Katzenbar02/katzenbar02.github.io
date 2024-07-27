@@ -55,3 +55,9 @@ $f_3(x; \lambda) = \lambda e^{-\lambda x}$ with λ > 0 and x ≥ 0 (and 0 otherw
 The exponential distribution is often thought of as a “waiting time” model. 
 
 Fitted Models
+
+$EV = 2.79164 = \frac{a+b}{2}$
+
+$Var = 10.97915 = \frac{(a-b)^2}{12}$
+
+## Fitted $f_0$
