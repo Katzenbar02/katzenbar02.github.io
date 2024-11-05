@@ -1,0 +1,304 @@
+body {
+    font-family: 'Arial, sans-serif';
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    color: #333;
+}
+header {
+    background: #4CAF50;
+    color: #fff;
+    padding: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+header nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+header nav ul li a:hover {
+    color: #ffeb3b;
+}
+.hero {
+    background: url('https://source.unsplash.com/1600x900/?finance,budget') no-repeat center center/cover;
+    color: #fff;
+    padding: 100px 0;
+    text-align: center;
+}
+.hero .container {
+    max-width: 800px;
+    margin: auto;
+}
+.hero h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+.hero button {
+    background: #ffeb3b;
+    color: #333;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.hero button:hover {
+    background: #ffc107;
+}
+.features {
+    background: #fff;
+    padding: 50px 20px;
+}
+.features .container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.feature {
+    background: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-width: 280px;
+    text-align: center;
+}
+.feature h3 {
+    margin-bottom: 10px;
+}
+.feature p {
+    font-size: 1rem;
+}
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+.transactions {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.transaction {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.transaction:last-child {
+    border-bottom: none;
+}
+.budget-setup {
+    background: #f9f9f9;
+    padding: 50px 20px;
+}
+.budget-setup .container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+}
+.budget-card {
+    flex: 0 0 auto;
+    width: 300px;
+    height: 200px;
+    border-radius: 15px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.budget-card:hover {
+    transform: scale(1.1);
+}
+.budget-card.selected {
+    transform: scale(1.2);
+}
+.budget-card.red {
+    background: #e74c3c;
+}
+.budget-card.blue {
+    background: #3498db;
+}
+.budget-card.green {
+    background: #2ecc71;
+}
+.budget-card.yellow {
+    background: #f1c40f;
+}
+.budget-card.purple {
+    background: #9b59b6;
+}
+
+/* Updated styles for signup and login boxes */
+.signup-box, .login-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    margin: 20px auto;
+}
+
+.signup-box h2, .login-box h2 {
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.signup-box input[type="text"],
+.signup-box input[type="email"],
+.signup-box input[type="password"],
+.login-box input[type="email"],
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.signup-box button, .login-box button {
+    width: 100%;
+    padding: 10px;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    border-radius: 5px;
+}
+
+.signup-box button:hover, .login-box button:hover {
+    background: #45a049;
+}
+
+.signup-link {
+    font-size: 0.9rem;
+    margin-top: 15px;
+}
+
+.signup-link a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Media Queries */
+
+/* For small screens (phones, less than 768px) */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hero {
+        padding: 50px 20px;
+    }
+
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 0.9rem;
+    }
+
+    .features .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature {
+        flex: 1 1 100%;
+        max-width: 500px;
+    }
+
+    .signup-box, .login-box {
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .budget-setup .container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .budget-card {
+        width: 150px;
+        height: 120px;
+        font-size: 1rem;
+    }
+
+    footer {
+        padding: 15px 0;
+    }
+}
+
+/* For tablets (between 768px and 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .features .container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .feature {
+        flex: 1 1 calc(50% - 15px);
+        max-width: 100%;
+    }
+
+    .budget-setup .container {
+        flex-wrap: wrap;
+    }
+}

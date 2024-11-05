@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Cashew Budgeting App</title>
+    <link rel="stylesheet" href="/style/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-wallet"></i> Cashew Budgeting App Dashboard</h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="dashboard-container">
+            <div class="budget-summary">
+                <h2>Budget Overview</h2>
+                <canvas id="budgetChart"></canvas>
+            </div>
+
+            <div class="create-budget">
+                <h3>Create a New Budget Category</h3>
+                <form id="budgetForm">
+                    <input type="text" id="categoryName" placeholder="Category Name (e.g., Groceries)" required>
+                    <input type="number" id="categoryLimit" placeholder="Monthly Limit ($)" required>
+                    <button type="submit">Add Category</button>
+                </form>
+            </div>
+
+            <div class="transaction-summary">
+                <h3>Recent Transactions</h3>
+                <form id="transactionForm">
+                    <input type="text" id="transactionName" placeholder="Transaction Name (e.g., Starbucks)" required>
+                    <input type="number" id="transactionAmount" placeholder="Amount ($)" required>
+                    <select id="transactionCategory" required>
+                        <option value="">Select Category</option>
+                    </select>
+                    <button type="submit">Add Transaction</button>
+                </form>
+                <ul id="transactionList">
+                    <!-- Recent transactions will be displayed here -->
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Cashew Budgeting App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mock Data (replace with data fetched from the server)
+            const categories = [
+                { name: 'Groceries', limit: 300, spent: 120 },
+                { name: 'Gas', limit: 150, spent: 50 },
+                { name: 'Eating Out', limit: 200, spent: 80 },
+            ];
+
+            const transactions = [
+                { name: 'McDonalds', amount: 15, category: 'Eating Out' },
+                { name: 'Shell Gas Station', amount: 40, category: 'Gas' },
+                { name: 'Walmart', amount: 60, category: 'Groceries' },
+            ];
+
+            const colors = [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ];
+
+            const borderColors = [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ];
+
+            // Populate Recent Transactions
+            const transactionList = document.getElementById('transactionList');
+            transactions.forEach(transaction => {
+                const li = document.createElement('li');
+                li.textContent = `${transaction.name}: $${transaction.amount} (${transaction.category})`;
+                transactionList.appendChild(li);
+            });
+
+            // Populate Transaction Category Options
+            const transactionCategory = document.getElementById('transactionCategory');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.name;
+                option.textContent = category.name;
+                transactionCategory.appendChild(option);
+            });
+
+            // Budget Chart
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            const budgetChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories.map(cat => cat.name),
+                    datasets: [{
+                        label: 'Spent vs Limit',
+                        data: categories.map(cat => cat.spent / cat.limit * 100),
+                        backgroundColor: categories.map((_, index) => colors[index % colors.length]),
+                        borderColor: categories.map((_, index) => borderColors[index % borderColors.length]),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: '% of Budget Used'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Handle Budget Form Submission
+            document.getElementById('budgetForm').onsubmit = function (event) {
+                event.preventDefault();
+                const categoryName = document.getElementById('categoryName').value;
+                const categoryLimit = document.getElementById('categoryLimit').value;
+
+                if (categoryName && categoryLimit) {
+                    categories.push({ name: categoryName, limit: categoryLimit, spent: 0 });
+                    budgetChart.data.labels.push(categoryName);
+                    budgetChart.data.datasets[0].data.push(0);
+                    budgetChart.data.datasets[0].backgroundColor.push(colors[categories.length % colors.length]);
+                    budgetChart.data.datasets[0].borderColor.push(borderColors[categories.length % borderColors.length]);
+                    budgetChart.update();
+
+                    // Add new category to transaction category options
+                    const option = document.createElement('option');
+                    option.value = categoryName;
+                    option.textContent = categoryName;
+                    transactionCategory.appendChild(option);
+                }
+            };
+
+            // Handle Transaction Form Submission
+            document.getElementById('transactionForm').onsubmit = function (event) {
+                event.preventDefault();
+                const transactionName = document.getElementById('transactionName').value;
+                const transactionAmount = parseFloat(document.getElementById('transactionAmount').value);
+                const transactionCategoryValue = document.getElementById('transactionCategory').value;
+
+                if (transactionName && transactionAmount && transactionCategoryValue) {
+                    transactions.push({ name: transactionName, amount: transactionAmount, category: transactionCategoryValue });
+                    const li = document.createElement('li');
+                    li.textContent = `${transactionName}: $${transactionAmount} (${transactionCategoryValue})`;
+                    transactionList.appendChild(li);
+
+                    // Update the corresponding category
+                    const category = categories.find(cat => cat.name === transactionCategoryValue);
+                    if (category) {
+                        category.spent += transactionAmount;
+                        const categoryIndex = categories.indexOf(category);
+                        budgetChart.data.datasets[0].data[categoryIndex] = (category.spent / category.limit) * 100;
+                        budgetChart.update();
+                    }
+                }
+            };
+        });
+    </script>
+</body>
+</html>

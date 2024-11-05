@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Cashew Budgeting App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/style/styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('form').onsubmit = function (event) {
+                const password = document.querySelector('input[name="password"]').value;
+                const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match.');
+                    event.preventDefault();
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-wallet"></i> Cashew Budgeting App</h1>
+            <nav>
+                <ul>
+                    <li><a href="cashew.html">Home</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="signup-container">
+            <div class="signup-box">
+                <h2>Create Your Account</h2>
+                <form action="/auth/signup" method="POST">
+                    <input type="text" name="name" placeholder="Full Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                    <button type="submit">Sign Up</button>
+                    <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
+                    <p class="login-link"><a href="cashew.html">Back to Home</a></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Cashew Budgeting App. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

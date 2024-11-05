@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashew Budgeting App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/style/styles.css">
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-wallet"></i> Cashew Budgeting App</h1>
+            <nav>
+                <ul>
+                    <li><a href="cashew.html">Home</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="signup.html">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Track your spending effortlessly</h2>
+                <p>Connect your cards and manage your budgets in real-time. Receive notifications to keep your expenses under control.</p>
+                <button id="connectBankButton">Connect Your Discover Card</button>
+            </div>
+        </section>
+        
+        <section class="features">
+            <div class="container">
+                <h2>Features</h2>
+                <div class="feature">
+                    <h3><i class="fas fa-chart-line"></i> Real-time Tracking</h3>
+                    <p>Keep track of your transactions instantly as they happen.</p>
+                </div>
+                <div class="feature">
+                    <h3><i class="fas fa-list-alt"></i> Custom Budget Categories</h3>
+                    <p>Create your own categories for different budgets and track your expenses accordingly.</p>
+                </div>
+                <div class="feature">
+                    <h3><i class="fas fa-bell"></i> Notifications</h3>
+                    <p>Receive notifications to alert you when you're nearing your category spending limit.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="budget-setup">
+            <div class="container">
+                <h2>Set Up Your Budget Categories</h2>
+                <div class="budget-card red" onclick="selectBudgetCard(this)">Groceries</div>
+                <div class="budget-card blue" onclick="selectBudgetCard(this)">Rent</div>
+                <div class="budget-card green" onclick="selectBudgetCard(this)">Entertainment</div>
+                <div class="budget-card yellow" onclick="selectBudgetCard(this)">Transportation</div>
+                <div class="budget-card purple" onclick="selectBudgetCard(this)">Savings</div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Cashew Budgeting App. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        var plaidLinkHandler = Plaid.create({
+            clientName: 'Cashew Budgeting App',
+            key: 'your-plaid-public-key',
+            product: ['transactions'],
+            env: 'sandbox', // Can be 'sandbox', 'development', or 'production'
+            onSuccess: function(public_token, metadata) {
+                // Send public_token to your server to exchange it for an access_token
+                fetch('/get_access_token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        public_token: public_token,
+                    }),
+                }).then(response => response.json())
+                  .then(data => {
+                      console.log('Access Token:', data.access_token);
+                      // Fetch and display transactions after obtaining the access token
+                      fetch('/get_transactions', {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                              access_token: data.access_token,
+                          }),
+                      }).then(response => response.json())
+                        .then(transactionsData => {
+                            console.log('Transactions:', transactionsData.transactions);
+                            // Display transactions on the webpage
+                            const transactionsContainer = document.createElement('div');
+                            transactionsContainer.className = 'transactions';
+                            transactionsData.transactions.forEach(transaction => {
+                                const transactionElement = document.createElement('div');
+                                transactionElement.className = 'transaction';
+                                transactionElement.innerHTML = `<p>${transaction.name}: $${transaction.amount}</p>`;
+                                transactionsContainer.appendChild(transactionElement);
+                            });
+                            document.body.appendChild(transactionsContainer);
+                        });
+                  });
+            },
+            onExit: function(err, metadata) {
+                // Handle when a user exits Link
+                if (err != null) {
+                    console.error(err);
+                }
+            },
+        });
+
+        document.getElementById('connectBankButton').onclick = function() {
+            plaidLinkHandler.open();
+        };
+
+        function selectBudgetCard(card) {
+            document.querySelectorAll('.budget-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
