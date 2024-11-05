@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/style/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 </head>
 <body>
     <header>
@@ -23,9 +24,31 @@
 
     <main>
         <section class="dashboard-container">
-            <div class="budget-summary">
-                <h2>Budget Overview</h2>
-                <canvas id="budgetChart"></canvas>
+            <div class="sidebar">
+                <h3>Display Options</h3>
+                <button onclick="changeView('bar')">Bar Chart</button>
+                <button onclick="changeView('line')">Line Graph</button>
+                <button onclick="changeView('buckets')">Buckets</button>
+                <button onclick="changeView('cards')">Cards</button>
+            </div>
+
+            <div class="view-container">
+                <div class="budget-summary" id="budgetSummary">
+                    <h2>Budget Overview</h2>
+                    <canvas id="budgetChart"></canvas>
+                </div>
+                <div class="bucket-view" id="bucketView" style="display:none;">
+                    <h2>Bucket View</h2>
+                    <div id="bucketsContainer">
+                        <!-- Buckets will be displayed here -->
+                    </div>
+                </div>
+                <div class="card-view" id="cardView" style="display:none;">
+                    <h2>Card View</h2>
+                    <div class="card-rotator" id="cardRotator">
+                        <!-- Cards will be displayed here -->
+                    </div>
+                </div>
             </div>
 
             <div class="create-budget">
@@ -51,6 +74,10 @@
                     <!-- Recent transactions will be displayed here -->
                 </ul>
             </div>
+
+            <div class="link-account">
+                <button id="linkButton">Connect Your Bank Account</button>
+            </div>
         </section>
     </main>
 
@@ -62,53 +89,35 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Mock Data (replace with data fetched from the server)
-            const categories = [
-                { name: 'Groceries', limit: 300, spent: 120 },
-                { name: 'Gas', limit: 150, spent: 50 },
-                { name: 'Eating Out', limit: 200, spent: 80 },
-            ];
-
-            const transactions = [
-                { name: 'McDonalds', amount: 15, category: 'Eating Out' },
-                { name: 'Shell Gas Station', amount: 40, category: 'Gas' },
-                { name: 'Walmart', amount: 60, category: 'Groceries' },
-            ];
-
+            const categories = [];
+            const transactions = [];
             const colors = [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'
             ];
-
             const borderColors = [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+                'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'
             ];
 
-            // Populate Recent Transactions
-            const transactionList = document.getElementById('transactionList');
-            transactions.forEach(transaction => {
-                const li = document.createElement('li');
-                li.textContent = `${transaction.name}: $${transaction.amount} (${transaction.category})`;
-                transactionList.appendChild(li);
-            });
-
-            // Populate Transaction Category Options
-            const transactionCategory = document.getElementById('transactionCategory');
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.name;
-                option.textContent = category.name;
-                transactionCategory.appendChild(option);
-            });
+            // Load existing categories from the server
+            fetch('/budget/get', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(category => {
+                    categories.push(category);
+                });
+                updateChart();
+                populateCategoryOptions();
+                updateBuckets();
+                updateCards();
+            })
+            .catch(error => console.error('Error fetching budgets:', error));
 
             // Budget Chart
             const ctx = document.getElementById('budgetChart').getContext('2d');
@@ -138,6 +147,56 @@
                 }
             });
 
+            // Update the chart with the latest categories
+            function updateChart() {
+                budgetChart.data.labels = categories.map(cat => cat.name);
+                budgetChart.data.datasets[0].data = categories.map(cat => cat.spent / cat.limit * 100);
+                budgetChart.update();
+            }
+
+            // Populate transaction category options
+            function populateCategoryOptions() {
+                const transactionCategory = document.getElementById('transactionCategory');
+                transactionCategory.innerHTML = '<option value="">Select Category</option>';
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.name;
+                    option.textContent = category.name;
+                    transactionCategory.appendChild(option);
+                });
+            }
+
+            // Update buckets view
+            function updateBuckets() {
+                const bucketsContainer = document.getElementById('bucketsContainer');
+                bucketsContainer.innerHTML = '';
+                categories.forEach(category => {
+                    const bucket = document.createElement('div');
+                    bucket.className = 'bucket';
+                    bucket.innerHTML = `
+                        <div class="bucket-label">${category.name}</div>
+                        <div class="bucket-fill" style="height: ${(category.spent / category.limit) * 100}%"></div>
+                    `;
+                    bucketsContainer.appendChild(bucket);
+                });
+            }
+
+            // Update cards view
+            function updateCards() {
+                const cardRotator = document.getElementById('cardRotator');
+                cardRotator.innerHTML = '';
+                categories.forEach(category => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${category.name}</h3>
+                        <p>Spent: $${category.spent}</p>
+                        <p>Limit: $${category.limit}</p>
+                    `;
+                    cardRotator.appendChild(card);
+                });
+            }
+
             // Handle Budget Form Submission
             document.getElementById('budgetForm').onsubmit = function (event) {
                 event.preventDefault();
@@ -145,18 +204,29 @@
                 const categoryLimit = document.getElementById('categoryLimit').value;
 
                 if (categoryName && categoryLimit) {
-                    categories.push({ name: categoryName, limit: categoryLimit, spent: 0 });
-                    budgetChart.data.labels.push(categoryName);
-                    budgetChart.data.datasets[0].data.push(0);
-                    budgetChart.data.datasets[0].backgroundColor.push(colors[categories.length % colors.length]);
-                    budgetChart.data.datasets[0].borderColor.push(borderColors[categories.length % borderColors.length]);
-                    budgetChart.update();
-
-                    // Add new category to transaction category options
-                    const option = document.createElement('option');
-                    option.value = categoryName;
-                    option.textContent = categoryName;
-                    transactionCategory.appendChild(option);
+                    // Save the new category to the server
+                    fetch('/budget/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ categoryName, categoryLimit })
+                    })
+                    .then(response => response.text())
+                    .then(() => {
+                        // Update the local categories and views
+                        const existingCategory = categories.find(cat => cat.name === categoryName);
+                        if (existingCategory) {
+                            existingCategory.limit = categoryLimit;
+                        } else {
+                            categories.push({ name: categoryName, limit: categoryLimit, spent: 0 });
+                        }
+                        updateChart();
+                        populateCategoryOptions();
+                        updateBuckets();
+                        updateCards();
+                    })
+                    .catch(error => console.error('Error adding/updating budget:', error));
                 }
             };
 
@@ -169,21 +239,111 @@
 
                 if (transactionName && transactionAmount && transactionCategoryValue) {
                     transactions.push({ name: transactionName, amount: transactionAmount, category: transactionCategoryValue });
+                    
                     const li = document.createElement('li');
                     li.textContent = `${transactionName}: $${transactionAmount} (${transactionCategoryValue})`;
-                    transactionList.appendChild(li);
+                    document.getElementById('transactionList').appendChild(li);
 
                     // Update the corresponding category
                     const category = categories.find(cat => cat.name === transactionCategoryValue);
                     if (category) {
                         category.spent += transactionAmount;
-                        const categoryIndex = categories.indexOf(category);
-                        budgetChart.data.datasets[0].data[categoryIndex] = (category.spent / category.limit) * 100;
-                        budgetChart.update();
+                        updateChart();
+                        updateBuckets();
+                        updateCards();
                     }
                 }
             };
+
+            // Handle Plaid Link Button
+            document.getElementById('linkButton').addEventListener('click', function () {
+                // Fetch the link token from the server
+                fetch('/plaid/create_link_token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.link_token) {
+                        var linkHandler = Plaid.create({
+                            token: data.link_token,
+                            onSuccess: function (public_token, metadata) {
+                                // Send public_token to your server
+                                fetch('/plaid/link', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ publicToken: public_token })
+                                })
+                                .then(response => response.text())
+                                .then(data => {
+                                    alert('Plaid account linked successfully');
+                                    fetchTransactions();
+                                })
+                                .catch(error => console.error('Error linking account:', error));
+                            },
+                            onExit: function (err, metadata) {
+                                // Handle user exit or error
+                                if (err) {
+                                    console.error('Plaid exit error:', err);
+                                }
+                            }
+                        });
+                        linkHandler.open();
+                    } else {
+                        console.error('Failed to get link token');
+                    }
+                })
+                .catch(error => console.error('Error creating link token:', error));
+            });
+
+            // Fetch transactions automatically and update categories
+            function fetchTransactions() {
+                fetch('/plaid/transactions', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(transactions => {
+                    transactions.forEach(transaction => {
+                        // Find appropriate category and update spent amount
+                        const category = categories.find(cat => transaction.category && transaction.category[0] === cat.name);
+                        if (category) {
+                            category.spent += transaction.amount;
+                            updateChart();
+                            updateBuckets();
+                            updateCards();
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching transactions:', error));
+            }
+
+            // Call fetchTransactions when needed (e.g., after linking the account)
         });
+
+        // Change view function
+        function changeView(view) {
+            document.getElementById('budgetSummary').style.display = 'none';
+            document.getElementById('bucketView').style.display = 'none';
+            document.getElementById('cardView').style.display = 'none';
+
+            if (view === 'bar' || view === 'line') {
+                const newType = view === 'bar' ? 'bar' : 'line';
+                budgetChart.config.type = newType;
+                budgetChart.update();
+                document.getElementById('budgetSummary').style.display = 'block';
+            } else if (view === 'buckets') {
+                document.getElementById('bucketView').style.display = 'block';
+            } else if (view === 'cards') {
+                document.getElementById('cardView').style.display = 'block';
+            }
+        }
     </script>
 </body>
 </html>
